@@ -9,7 +9,7 @@
 namespace ui {
 
 enum class Screen : uint8_t {
-  Clock, Weather, Currency, Crypto, Stocks, Match, News, HackerNews, Video, Radar, Repo, Battery
+  Clock, Weather, Currency, Crypto, Stocks, News, HackerNews, Video, Radar, Repo, Battery
 };
 
 struct HeadlineStyle {
@@ -28,7 +28,6 @@ struct DashboardState {
   StocksData stocks;
   NewsData news;
   NewsData hackerNews;
-  MatchData match;
   RadarData radar;
   RepoData repo;
   BatteryData battery;
@@ -48,7 +47,6 @@ void drawCurrencyScreen(LovyanGFX& gfx, const CurrencyData& currency);
 void drawCryptoScreen(LovyanGFX& gfx, const CryptoData& crypto);
 void drawStocksScreen(LovyanGFX& gfx, const StocksData& stocks);
 void drawHeadlineScreen(LovyanGFX& gfx, const NewsData& news, const HeadlineStyle& style);
-void drawMatchScreen(LovyanGFX& gfx, const MatchData& match);
 void drawRadarScreen(LovyanGFX& gfx, const RadarData& radar);
 void drawRepoScreen(LovyanGFX& gfx, const RepoData& repo);
 void drawBatteryScreen(LovyanGFX& gfx, const BatteryData& battery);

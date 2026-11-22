@@ -10,8 +10,8 @@ namespace config {
 // Telas exibidas, na ordem de rotação (remova as que não quiser)
 constexpr ui::Screen kScreens[] = {
     ui::Screen::Clock, ui::Screen::Weather, ui::Screen::Currency,   ui::Screen::Crypto, ui::Screen::Stocks,
-    ui::Screen::Match, ui::Screen::News,    ui::Screen::HackerNews, ui::Screen::Video,  ui::Screen::Radar,
-    ui::Screen::Repo,  ui::Screen::Battery};
+    ui::Screen::News,  ui::Screen::HackerNews, ui::Screen::Video, ui::Screen::Radar, ui::Screen::Repo,
+    ui::Screen::Battery};
 constexpr uint32_t kScreenRotationSeconds = 15;  // 0 = troca apenas pelo toque
 
 // Tela
@@ -61,11 +61,6 @@ constexpr char kNewsSource[] = "g1";
 // YouTube: ID do canal (começa com "UC"); vazio desativa a tela
 constexpr char kYoutubeChannelId[] = "";
 
-// Jogo do time (ESPN): bra.1 = Brasileirão, eng.1 = Premier League, esp.1 = La Liga, uefa.champions = Champions
-constexpr char kLeagueCode[] = "bra.1";
-constexpr char kLeagueName[] = "Brasileirão";
-constexpr char kFavoriteTeam[] = "";  // nome ou sigla (ex.: "Flamengo" ou "FLA"); vazio = primeiro jogo da rodada
-
 // Radar
 constexpr float kRadarRadiusKm = 40;
 
@@ -81,7 +76,6 @@ constexpr uint32_t kStocksIntervalMs = 5 * kMinuteMs;
 constexpr uint32_t kNewsIntervalMs = 2 * kMinuteMs;   // avança uma manchete por ciclo
 constexpr uint32_t kVideoIntervalMs = 2 * kMinuteMs;  // avança um vídeo por ciclo
 constexpr uint32_t kHackerNewsIntervalMs = 5 * kMinuteMs;
-constexpr uint32_t kMatchIntervalMs = 1 * kMinuteMs;
 constexpr uint32_t kRadarIntervalMs = 1 * kMinuteMs;
 constexpr uint32_t kRepoIntervalMs = 10 * kMinuteMs;  // a API sem token permite 60 consultas por hora
 constexpr uint32_t kRetryIntervalMs = 30UL * 1000;

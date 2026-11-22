@@ -66,7 +66,6 @@ Service services[] = {
     {ui::Screen::News, config::kNewsIntervalMs, [] { return refresh(&ui::DashboardState::news, services::fetchNews); }},
     {ui::Screen::Video, config::kVideoIntervalMs, [] { return refresh(&ui::DashboardState::video, services::fetchVideo); }},
     {ui::Screen::HackerNews, config::kHackerNewsIntervalMs, [] { return refresh(&ui::DashboardState::hackerNews, services::fetchHackerNews); }},
-    {ui::Screen::Match, config::kMatchIntervalMs, [] { return refresh(&ui::DashboardState::match, services::fetchMatch); }},
     {ui::Screen::Radar, config::kRadarIntervalMs, [] { return refresh(&ui::DashboardState::radar, services::fetchRadar); }},
     {ui::Screen::Repo, config::kRepoIntervalMs, [] { return refresh(&ui::DashboardState::repo, services::fetchRepo); }},
 };

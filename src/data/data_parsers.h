@@ -31,9 +31,6 @@ bool parseStock(const char* json, StockQuote& stock);
 uint8_t parseStoryIds(const char* json, uint32_t* ids, uint8_t maxIds);
 bool parseStory(const char* json, char* title, size_t titleSize, uint32_t& score, uint32_t& comments);
 
-// ESPN: destaca o jogo do time informado (ou o primeiro da rodada)
-bool parseScoreboard(const char* json, const char* favoriteTeam, MatchData& match);
-
 // adsb.lol: aeronaves ordenadas por distância
 bool parseAircraft(const char* json, RadarData& radar);
 

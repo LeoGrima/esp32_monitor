@@ -203,14 +203,6 @@ bool fetchHackerNews(NewsData& news) {
   return news.valid;
 }
 
-bool fetchMatch(MatchData& match) {
-  char url[112];
-  snprintf(url, sizeof(url), "https://site.api.espn.com/apis/site/v2/sports/soccer/%s/scoreboard", config::kLeagueCode);
-  snprintf(match.league, sizeof(match.league), "%s", config::kLeagueName);
-  String body;
-  return http::get(url, body) && parsers::parseScoreboard(body.c_str(), config::kFavoriteTeam, match);
-}
-
 bool fetchRadar(RadarData& radar) {
   char url[96];
   snprintf(url, sizeof(url), "https://api.adsb.lol/v2/point/%.4f/%.4f/%.0f", place().latitude, place().longitude,

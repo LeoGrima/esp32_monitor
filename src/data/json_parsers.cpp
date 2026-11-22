@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-#include <strings.h>
 
 #include <ArduinoJson.h>
 
@@ -9,7 +8,7 @@
 
 namespace parsers {
 
-constexpr uint8_t kDeepNesting = 24;  // respostas da ESPN e do Yahoo são bem aninhadas
+constexpr uint8_t kDeepNesting = 24;  // a resposta do Yahoo é bem aninhada
 
 bool parseLocation(const char* json, Place& place) {
   JsonDocument doc;
@@ -156,71 +155,6 @@ bool parseStory(const char* json, char* title, size_t titleSize, uint32_t& score
   snprintf(title, titleSize, "%s", text);
   score = doc["score"] | 0;
   comments = doc["descendants"] | 0;
-  return true;
-}
-
-namespace {
-
-void readSide(JsonObjectConst competitor, MatchSide& side) {
-  JsonObjectConst team = competitor["team"];
-  snprintf(side.name, sizeof(side.name), "%s", team["shortDisplayName"] | "");
-  snprintf(side.abbreviation, sizeof(side.abbreviation), "%s", team["abbreviation"] | "");
-  side.score = atoi(competitor["score"] | "0");
-}
-
-bool readMatch(JsonObjectConst event, MatchInfo& match) {
-  JsonArrayConst competitors = event["competitions"][0]["competitors"];
-  if (competitors.size() < 2) return false;
-  for (JsonObjectConst competitor : competitors) {
-    readSide(competitor, strcmp(competitor["homeAway"] | "", "home") == 0 ? match.home : match.away);
-  }
-  JsonObjectConst type = event["status"]["type"];
-  const char* state = type["state"] | "pre";
-  match.state = strcmp(state, "in") == 0 ? MatchState::Live
-                : strcmp(state, "post") == 0 ? MatchState::Finished : MatchState::Scheduled;
-  snprintf(match.clock, sizeof(match.clock), "%s", type["shortDetail"] | "");
-  match.startsAt = parseIsoDate(event["date"] | "");
-  match.valid = true;
-  return true;
-}
-
-bool isTeam(const MatchSide& side, const char* team) {
-  return strcasecmp(side.name, team) == 0 || strcasecmp(side.abbreviation, team) == 0;
-}
-
-}  // namespace
-
-bool parseScoreboard(const char* json, const char* favoriteTeam, MatchData& data) {
-  JsonDocument filter;
-  JsonObject event = filter["events"][0].to<JsonObject>();
-  event["date"] = true;
-  event["status"]["type"]["state"] = event["status"]["type"]["shortDetail"] = true;
-  JsonObject competitor = event["competitions"][0]["competitors"][0].to<JsonObject>();
-  competitor["homeAway"] = competitor["score"] = true;
-  competitor["team"]["shortDisplayName"] = competitor["team"]["abbreviation"] = true;
-
-  JsonDocument doc;
-  if (deserializeJson(doc, json, DeserializationOption::Filter(filter), DeserializationOption::NestingLimit(kDeepNesting))) {
-    return false;
-  }
-
-  MatchData result;
-  snprintf(result.league, sizeof(result.league), "%s", data.league);
-  for (JsonObjectConst item : doc["events"].as<JsonArrayConst>()) {
-    MatchInfo match;
-    if (!readMatch(item, match)) continue;
-    const bool favorite = isTeam(match.home, favoriteTeam) || isTeam(match.away, favoriteTeam);
-    if (!result.main.valid) {
-      result.main = match;
-    } else if (favorite) {
-      if (result.otherCount < kMaxOtherMatches) result.others[result.otherCount++] = result.main;
-      result.main = match;
-    } else if (result.otherCount < kMaxOtherMatches) {
-      result.others[result.otherCount++] = match;
-    }
-  }
-  if (!result.main.valid) return false;
-  data = result;
   return true;
 }
 

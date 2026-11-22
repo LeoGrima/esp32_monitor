@@ -16,7 +16,7 @@ namespace {
 
 constexpr int kWidth = 320;
 constexpr int kHeight = 240;
-constexpr uint8_t kScreenCount = 12;
+constexpr uint8_t kScreenCount = 11;
 
 LGFX_Sprite canvas;
 std::string outputDir;
@@ -95,11 +95,6 @@ int main(int argc, char** argv) {
   strcpy(state.hackerNews.headlines[1], "Why embedded fonts still matter");
   strcpy(state.hackerNews.headlines[2], "The surprising cost of TLS handshakes on microcontrollers");
   strcpy(state.hackerNews.detail, "538 pontos · 133 comentários");
-  state.match.main = {{"Palmeiras", "PAL", 1}, {"Flamengo", "FLA", 1}, MatchState::Live, "67'", 0, true};
-  state.match.others[0] = {{"Santos", "SAN", 2}, {"Bahia", "BAH", 0}, MatchState::Finished, "", 0, true};
-  state.match.others[1] = {{"Grêmio", "GRE", 0}, {"Vasco", "VAS", 0}, MatchState::Scheduled, "", state.nowEpoch + 7200, true};
-  state.match.otherCount = 2;
-  strcpy(state.match.league, "Brasileirão");
   state.radar = {{{"GLO1513", "B38M", 19.0f, 269, 2034}, {"TAM3321", "A320", 31.5f, 40, 5200},
                   {"AZU4410", "E195", 12.2f, 150, 900}, {"PTABC", "C172", 36.0f, 310, 450}}, 4, 16, 40, true};
   state.repo = {"espressif/arduino-esp32", 15234, 412, 37, BuildState::Passed, true};
@@ -127,7 +122,6 @@ int main(int argc, char** argv) {
   save(ui::Screen::Battery, state, "battery");
   state.battery = {4.12f, 91, BatteryTrend::Charging, 32.0f, 17, true};
   save(ui::Screen::Battery, state, "alt_battery_charging");
-  save(ui::Screen::Match, state, "match");
   save(ui::Screen::HackerNews, state, "hacker_news");
   save(ui::Screen::Radar, state, "radar");
   save(ui::Screen::Repo, state, "repo");

@@ -18,7 +18,6 @@ bool fetchStocks(StocksData& stocks);
 bool fetchNews(NewsData& news);
 bool fetchVideo(VideoData& video);
 bool fetchHackerNews(NewsData& news);
-bool fetchMatch(MatchData& match);
 bool fetchRadar(RadarData& radar);
 bool fetchRepo(RepoData& repo);
 

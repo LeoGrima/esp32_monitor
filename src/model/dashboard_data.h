@@ -7,7 +7,6 @@ constexpr uint8_t kMaxCoins = 4;
 constexpr uint8_t kMaxStocks = 3;
 constexpr uint8_t kNewsVisible = 3;
 constexpr uint8_t kNewsTitleSize = 160;
-constexpr uint8_t kMaxOtherMatches = 2;
 constexpr uint8_t kMaxAircraft = 8;
 
 struct CurrencyQuote {
@@ -67,30 +66,6 @@ struct NewsData {
   uint8_t index = 0;
   uint8_t total = 0;
   bool valid = false;
-};
-
-enum class MatchState : uint8_t { Scheduled, Live, Finished };
-
-struct MatchSide {
-  char name[20] = "";
-  char abbreviation[6] = "";
-  uint8_t score = 0;
-};
-
-struct MatchInfo {
-  MatchSide home;
-  MatchSide away;
-  MatchState state = MatchState::Scheduled;
-  char clock[12] = "";      // tempo de jogo quando ao vivo
-  long long startsAt = 0;   // epoch UTC
-  bool valid = false;
-};
-
-struct MatchData {
-  MatchInfo main;
-  MatchInfo others[kMaxOtherMatches];
-  uint8_t otherCount = 0;
-  char league[32] = "";
 };
 
 struct Aircraft {

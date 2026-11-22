@@ -9,7 +9,6 @@ Firmware para o módulo **ES3C28P** (ESP32-S3 + tela IPS 2.8" 240x320 com toque 
 | Dólar | Cotação PTAX, variação do dia, barras da semana e euro | Banco Central (PTAX) |
 | Cripto | Preço e variação em 24 h (até 4 moedas) | CoinGecko |
 | Bolsa | Ibovespa, S&P 500 e Nasdaq (ou ações) | Yahoo Finance |
-| Jogo do time | Placar, tempo de jogo e outros jogos da rodada | ESPN |
 | Notícias | Manchete e duas chamadas seguintes | RSS (g1 por padrão) |
 | Hacker News | Histórias do topo, pontos e comentários | API do Hacker News |
 | YouTube | Vídeos recentes do canal: miniatura, título e idade | RSS do canal |
@@ -51,7 +50,6 @@ Se a porta não aparecer, entre em modo de gravação: segure **BOOT**, pression
 | `kTimezone`, `kSouthernHemisphere` | Fuso horário de reserva e estação do ano |
 | `kCoins`, `kCryptoCurrency` | Moedas da tela Cripto |
 | `kStocks` | Ativos da tela Bolsa (ações da B3 terminam em `.SA`) |
-| `kLeagueCode`, `kLeagueName`, `kFavoriteTeam` | Campeonato e time em destaque |
 | `kNewsFeedUrl`, `kNewsSource` | Feed RSS de notícias |
 | `kYoutubeChannelId` | Canal do YouTube; **vazio desativa a tela** |
 | `kRadarRadiusKm` | Raio do radar em torno de `kLatitude`/`kLongitude` |

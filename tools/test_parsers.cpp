@@ -1,6 +1,6 @@
 // Testa os parsers no PC com respostas de exemplo (ou reais, salvas em arquivo).
 // Uso: test_parsers [pasta com weather.json, ptax.json, crypto.json, stock.json, news.xml, video.xml,
-//                    stories.json, story.json, scoreboard.json, aircraft.json, repo.json]
+//                    stories.json, story.json, aircraft.json, repo.json]
 #include <cassert>
 #include <cmath>
 #include <cstdio>
@@ -51,14 +51,6 @@ constexpr char kVideo[] = R"(<feed><title>Canal de Exemplo</title>
 
 constexpr char kStories[] = "[50582069,50593925,50593199,50593125]";
 constexpr char kStory[] = R"({"by":"x","descendants":133,"id":1,"kids":[1,2],"score":538,"title":"Hello \"HN\"","type":"story"})";
-
-constexpr char kScoreboard[] = R"({"leagues":[{"name":"Brazilian Serie A"}],"events":[
-{"date":"2026-11-21T19:30Z","status":{"type":{"state":"post","shortDetail":"FT"}},"competitions":[{"competitors":[
-{"homeAway":"home","score":"2","team":{"abbreviation":"SAN","shortDisplayName":"Santos"}},
-{"homeAway":"away","score":"0","team":{"abbreviation":"BAH","shortDisplayName":"Bahia"}}]}]},
-{"date":"2026-11-21T21:00Z","status":{"type":{"state":"in","shortDetail":"67'"}},"competitions":[{"competitors":[
-{"homeAway":"away","score":"1","team":{"abbreviation":"FLA","shortDisplayName":"Flamengo"}},
-{"homeAway":"home","score":"3","team":{"abbreviation":"PAL","shortDisplayName":"Palmeiras"}}]}]}]})";
 
 constexpr char kAircraft[] = R"({"ac":[{"flight":"TAM3321 ","t":"A320","alt_baro":17000,"dst":17.0,"dir":40.5},
 {"flight":"GLO1513 ","t":"B38M","alt_baro":"ground","dst":5.4,"dir":269.3},{"hex":"x"}],"total":3})";
@@ -135,17 +127,6 @@ int main(int argc, char** argv) {
   assert(parsers::parseStory(load(dir, "story.json", kStory).c_str(), title, sizeof(title), score, comments));
   printf("hacker news: %u, %u... | %s (%u pontos, %u comentarios)\n", ids[0], ids[1], title, score, comments);
   if (samples) assert(ids[2] == 50593199 && score == 538 && comments == 133 && strcmp(title, "Hello \"HN\"") == 0);
-
-  MatchData match;
-  assert(parsers::parseScoreboard(load(dir, "scoreboard.json", kScoreboard).c_str(), "Flamengo", match));
-  printf("jogo: %s %u x %u %s [%s] estado=%d inicio=%lld, outros=%u\n", match.main.home.abbreviation,
-         match.main.home.score, match.main.away.score, match.main.away.name, match.main.clock,
-         static_cast<int>(match.main.state), match.main.startsAt, match.otherCount);
-  if (samples) {
-    assert(strcmp(match.main.home.abbreviation, "PAL") == 0 && match.main.home.score == 3 && match.main.away.score == 1);
-    assert(match.main.state == MatchState::Live && match.otherCount == 1 && match.others[0].home.score == 2);
-    assert(match.others[0].startsAt == 1795289400);
-  }
 
   RadarData radar;
   assert(parsers::parseAircraft(load(dir, "aircraft.json", kAircraft).c_str(), radar));

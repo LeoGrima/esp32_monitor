@@ -18,7 +18,6 @@ void drawScreen(LovyanGFX& gfx, Screen screen, const DashboardState& state) {
     case Screen::HackerNews:
       drawHeadlineScreen(gfx, state.hackerNews, {"TOPO", "Hacker News", "Aguardando o Hacker News", 0xFF7A1Au, 0x3A1E08u, 0x140C06u});
       break;
-    case Screen::Match:    drawMatchScreen(gfx, state.match); break;
     case Screen::Radar:    drawRadarScreen(gfx, state.radar); break;
     case Screen::Repo:     drawRepoScreen(gfx, state.repo); break;
     case Screen::Battery:  drawBatteryScreen(gfx, state.battery); break;
