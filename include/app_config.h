@@ -21,7 +21,7 @@ constexpr uint8_t kTouchRotationOffset = 2;  // 0 a 3: alinha o toque com a imag
 constexpr uint8_t kBrightness = 200;     // 0 a 255
 
 // Data e hora
-constexpr char kTimezone[] = "<-03>3";  // horário de Brasília (formato POSIX)
+constexpr char kTimezone[] = "<-04>4";  // Cuiabá/MT, UTC-4 (formato POSIX; Brasília seria "<-03>3")
 constexpr char kNtpServer[] = "a.st1.ntp.br";
 constexpr bool kSouthernHemisphere = true;
 
