@@ -74,6 +74,15 @@ int main(int argc, char** argv) {
   Place place;
   assert(parsers::parseLocation(R"({"success":true,"city":"Curitiba","latitude":-25.4284,"longitude":-49.2733})", place));
   assert(strcmp(place.city, "Curitiba") == 0 && near(place.latitude, -25.4284f) && near(place.longitude, -49.2733f));
+  assert(!place.hasUtcOffset);
+  assert(parsers::parseLocation(R"({"success":true,"city":"Cuiabá","latitude":-15.6,"longitude":-56.1,
+    "timezone":{"id":"America/Cuiaba","offset":-14400,"utc":"-04:00"}})", place));
+  assert(place.hasUtcOffset && place.utcOffsetSeconds == -14400);
+  char timezone[24];
+  parsers::formatTimezone(-14400, timezone, sizeof(timezone));
+  assert(strcmp(timezone, "<-0400>4:00") == 0);
+  parsers::formatTimezone(19800, timezone, sizeof(timezone));
+  assert(strcmp(timezone, "<+0530>-5:30") == 0);
   assert(!parsers::parseLocation(R"({"success":false,"message":"Invalid IP address"})", place));
 
   WeatherData weather;

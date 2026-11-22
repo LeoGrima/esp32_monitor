@@ -3,6 +3,7 @@
 
 #include "app_config.h"
 #include "board_pins.h"
+#include "data/data_parsers.h"
 #include "data/data_services.h"
 #include "display/board_display.h"
 #include "net/wifi_setup.h"
@@ -80,7 +81,7 @@ void selectActiveScreens() {
   }
 }
 
-// Detecta o local pela rede e refaz as consultas que dependem dele
+// Detecta o local e o fuso horário pela rede e refaz as consultas que dependem do local
 void updatePlace() {
   static uint32_t nextAttemptMs = 0;
   static bool detected = !config::kDetectLocation;
@@ -90,6 +91,12 @@ void updatePlace() {
   Place place;
   if (!services::detectPlace(place)) return;
   detected = true;
+  if (place.hasUtcOffset) {
+    char timezone[24];
+    parsers::formatTimezone(place.utcOffsetSeconds, timezone, sizeof(timezone));
+    setenv("TZ", timezone, 1);
+    tzset();
+  }
   StateLock lock;  // a tela lê o nome da cidade
   services::setPlace(place);
   for (Service& service : services) {

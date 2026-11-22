@@ -135,6 +135,8 @@ struct Place {
   char city[32] = "";
   float latitude = 0;
   float longitude = 0;
+  int32_t utcOffsetSeconds = 0;
+  bool hasUtcOffset = false;
 };
 
 struct WeatherData {

@@ -42,6 +42,9 @@ bool parseRepo(const char* json, RepoData& repo);
 bool parseSearchCount(const char* json, uint32_t& count);
 bool parseWorkflowRun(const char* json, BuildState& build);
 
+// Fuso no formato POSIX a partir do deslocamento em relação ao UTC (ex.: -14400 -> "<-0400>4:00")
+void formatTimezone(int32_t utcOffsetSeconds, char* out, size_t outSize);
+
 // "AAAA-MM-DDTHH:MM[:SS]" (UTC) -> epoch
 long long parseIsoDate(const char* text);
 

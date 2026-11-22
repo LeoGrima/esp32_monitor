@@ -19,6 +19,8 @@ bool parseLocation(const char* json, Place& place) {
   snprintf(place.city, sizeof(place.city), "%s", city);
   place.latitude = doc["latitude"];
   place.longitude = doc["longitude"];
+  place.hasUtcOffset = !doc["timezone"]["offset"].isNull();
+  place.utcOffsetSeconds = doc["timezone"]["offset"] | 0;
   return true;
 }
 
@@ -105,6 +107,15 @@ bool parseStock(const char* json, StockQuote& stock) {
   stock.pctChange = (price / previous - 1) * 100;
   stock.valid = true;
   return true;
+}
+
+void formatTimezone(int32_t utcOffsetSeconds, char* out, size_t outSize) {
+  const bool east = utcOffsetSeconds >= 0;
+  const int32_t seconds = east ? utcOffsetSeconds : -utcOffsetSeconds;
+  const int hours = seconds / 3600;
+  const int minutes = seconds % 3600 / 60;
+  // No padrão POSIX o sinal do deslocamento é invertido em relação ao nome
+  snprintf(out, outSize, "<%c%02d%02d>%s%d:%02d", east ? '+' : '-', hours, minutes, east ? "-" : "", hours, minutes);
 }
 
 long long parseIsoDate(const char* text) {

@@ -57,7 +57,7 @@ void setPlace(const Place& detected) { place() = detected; }
 
 bool detectPlace(Place& detected) {
   String body;
-  return http::get("https://ipwho.is/?fields=success,city,latitude,longitude", body) &&
+  return http::get("https://ipwho.is/?fields=success,city,latitude,longitude,timezone", body) &&
          parsers::parseLocation(body.c_str(), detected);
 }
 

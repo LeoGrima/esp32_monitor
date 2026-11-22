@@ -25,13 +25,13 @@ constexpr uint8_t kBrightness = 200;     // 0 a 255
 constexpr float kBatteryDividerRatio = 2.0f;
 
 // Data e hora
-constexpr char kTimezone[] = "<-04>4";  // Cuiabá/MT, UTC-4 (formato POSIX; Brasília seria "<-03>3")
+constexpr char kTimezone[] = "<-04>4";  // reserva: Cuiabá/MT, UTC-4 (formato POSIX; Brasília seria "<-03>3")
 constexpr char kNtpServer[] = "a.st1.ntp.br";
 constexpr bool kSouthernHemisphere = true;
 
 // Local: usado pelo clima (Open-Meteo) e pelo radar de aeronaves (adsb.lol).
-// Com a detecção ligada, cidade e coordenadas vêm do endereço de rede (ipwho.is);
-// os valores abaixo valem enquanto a detecção não responde ou se ela estiver desligada.
+// Com a detecção ligada, cidade, coordenadas e fuso horário vêm do endereço de rede (ipwho.is);
+// os valores deste arquivo valem enquanto a detecção não responde ou se ela estiver desligada.
 constexpr bool kDetectLocation = true;
 constexpr char kCityName[] = "São Paulo";
 constexpr float kLatitude = -23.5505f;
