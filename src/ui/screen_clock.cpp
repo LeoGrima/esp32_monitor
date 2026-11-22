@@ -29,23 +29,17 @@ const char* seasonName(const tm& now, bool southernHemisphere) {
   return kSeasons[southernHemisphere ? index : (index + 2) % 4];
 }
 
-// Retorna o quanto a paisagem deve escurecer
-float drawSkyForHour(LovyanGFX& gfx, int hour) {
+void drawSkyForHour(LovyanGFX& gfx, int hour) {
   if (hour >= 6 && hour < 8) {
     fillBackground(gfx, 0x35508Fu, 0xF2A66Bu);
-    return 0.3f;
-  }
-  if (hour >= 8 && hour < 17) {
+  } else if (hour >= 8 && hour < 17) {
     fillBackground(gfx, color::kDayTop, color::kDayBottom);
-    return 0.0f;
-  }
-  if (hour >= 17 && hour < 19) {
+  } else if (hour >= 17 && hour < 19) {
     fillBackground(gfx, 0x3B2A6Bu, 0xF08A5Du);
-    return 0.3f;
+  } else {
+    fillBackground(gfx, color::kNightTop, color::kNightBottom);
+    drawStars(gfx, 45);
   }
-  fillBackground(gfx, color::kNightTop, color::kNightBottom);
-  drawStars(gfx, 45);
-  return 0.6f;
 }
 
 void drawHand(LovyanGFX& gfx, int cx, int cy, float turns, int length, float thickness, uint32_t tint) {
@@ -93,7 +87,7 @@ void drawFace(LovyanGFX& gfx, int cx, int cy, int radius, const tm& now) {
 }  // namespace
 
 void drawClockScreen(LovyanGFX& gfx, const tm& now, bool southernHemisphere) {
-  drawHills(gfx, drawSkyForHour(gfx, now.tm_hour));
+  drawSkyForHour(gfx, now.tm_hour);
   drawHeader(gfx, kWeekdays[now.tm_wday % 7], seasonName(now, southernHemisphere), color::kNeutral, true);
 
   const Rect footer = drawFooterPanel(gfx);
