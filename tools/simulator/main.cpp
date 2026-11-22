@@ -10,6 +10,7 @@
 
 #include "ui/ui_screens.h"
 #include "ui/ui_widgets.h"
+#include "ui/wifi_setup_ui.h"
 
 namespace {
 
@@ -20,9 +21,15 @@ constexpr uint8_t kScreenCount = 14;
 LGFX_Sprite canvas;
 std::string outputDir;
 
+void dump(const char* name);
+
 void save(ui::Screen screen, const ui::DashboardState& state, const char* name) {
   ui::drawScreen(canvas, screen, state);
   ui::drawPageDots(canvas, static_cast<uint8_t>(screen), kScreenCount);
+  dump(name);
+}
+
+void dump(const char* name) {
   std::vector<uint8_t> pixels(kWidth * kHeight * 3);
   canvas.readRectRGB(0, 0, kWidth, kHeight, pixels.data());
   FILE* file = fopen((outputDir + "/" + name + ".ppm").c_str(), "wb");
@@ -105,6 +112,25 @@ int main(int argc, char** argv) {
   state.services.items[0] = {"Site", "142 ms", HealthLevel::Ok, true};
   state.services.items[1] = {"API", "1.980 ms", HealthLevel::Warning, true};
   state.services.items[2] = {"Loja", "Fora do ar", HealthLevel::Down, true};
+
+  const ui::NetworkEntry networks[] = {{"Casa 2.4G", -48, true}, {"Vizinho", -67, true}, {"Cafeteria Livre", -72, false},
+                                       {"Escritório", -80, true}, {"IoT", -88, true}, {"Outra", -90, true}};
+  ui::drawNetworkList(canvas, {networks, 6, 0});
+  dump("wifi_list");
+  ui::drawKeyboard(canvas, {"Casa 2.4G", "minhaSenha123", ui::KeyboardMode::Lower});
+  dump("wifi_keyboard");
+  ui::drawKeyboard(canvas, {"Casa 2.4G", "", ui::KeyboardMode::Symbols});
+  dump("alt_wifi_symbols");
+  const ui::KeyHit keyQ = ui::hitKeyboard(ui::KeyboardMode::Lower, 5, 110);
+  const ui::KeyHit keyOk = ui::hitKeyboard(ui::KeyboardMode::Lower, 300, 230);
+  const ui::KeyHit keyDel = ui::hitKeyboard(ui::KeyboardMode::Upper, 300, 150);
+  const ui::ListHit row2 = ui::hitNetworkList({networks, 6, 0}, 100, 80);
+  const ui::ListHit rescan = ui::hitNetworkList({networks, 6, 0}, 160, 225);
+  if (keyQ.character != 'q' || keyOk.action != ui::KeyAction::Confirm || keyDel.action != ui::KeyAction::Backspace ||
+      row2.action != ui::ListAction::Select || row2.index != 1 || rescan.action != ui::ListAction::Rescan) {
+    fprintf(stderr, "mapeamento de toque incorreto\n");
+    return 1;
+  }
 
   save(ui::Screen::Match, state, "match");
   save(ui::Screen::HackerNews, state, "hacker_news");

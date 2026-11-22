@@ -26,17 +26,20 @@ Nenhuma das fontes exige chave de API.
 ## Como usar
 
 1. Instale o [PlatformIO](https://platformio.org/install) (extensão do VS Code ou `pip install platformio`).
-2. Copie `include/secrets.example.h` para `include/secrets.h` e informe o nome e a senha do Wi-Fi (2.4 GHz).
-3. Ajuste cidade, moedas, ações, feed e telas em `include/app_config.h`.
-4. Conecte o módulo pela USB-C e grave:
+2. Ajuste cidade, moedas, ações, feed e telas em `include/app_config.h`.
+3. Conecte o módulo pela USB-C e grave:
 
 ```bash
 pio run -t upload
 ```
 
+4. Na primeira vez, a tela lista as redes Wi-Fi (2.4 GHz): toque na sua, digite a senha no teclado e confirme em **OK**. A rede fica gravada na placa.
+
+Para trocar de rede depois, segure o botão **BOOT** por 2 segundos.
+
 Se a porta não aparecer, entre em modo de gravação: segure **BOOT**, pressione e solte **RESET**, solte **BOOT**.
 
-**Navegação:** as telas trocam sozinhas a cada 15 s. Toque no terço esquerdo para voltar; no restante da tela (ou no botão BOOT) para avançar.
+**Navegação:** as telas trocam sozinhas a cada 15 s. Toque no terço esquerdo para voltar; no restante da tela (ou um toque curto no botão BOOT) para avançar.
 
 ## Configuração (`include/app_config.h`)
 
@@ -63,10 +66,11 @@ Se a porta não aparecer, entre em modo de gravação: segure **BOOT**, pression
 include/
   app_config.h          ajustes do painel
   board_pins.h          pinagem do módulo
-  secrets.example.h     modelo das credenciais de Wi-Fi
+  secrets.example.h     opcional: rede padrão para placas sem toque (ES3N28P)
 src/
   main.cpp              inicialização, tarefa de rede e laço de desenho
   display/              configuração do display, toque e backlight (LovyanGFX)
+  net/                  configuração do Wi-Fi pela tela e credenciais gravadas na placa
   data/                 HTTP, serviços (busca) e parsers (interpretação) de cada fonte
   model/                estruturas de dados compartilhadas
   ui/                   telas, componentes, tema e fontes embutidas

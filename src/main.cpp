@@ -5,20 +5,16 @@
 #include "board_pins.h"
 #include "data/data_services.h"
 #include "display/board_display.h"
+#include "net/wifi_setup.h"
 #include "ui/ui_screens.h"
 #include "ui/ui_widgets.h"
-
-#if __has_include("secrets.h")
-#include "secrets.h"
-#else
-#error "Copie include/secrets.example.h para include/secrets.h e informe a rede Wi-Fi"
-#endif
 
 namespace {
 
 constexpr time_t kValidEpoch = 1700000000;  // antes disso o relógio ainda não foi sincronizado
 constexpr uint32_t kNetworkTaskStack = 16384;
 constexpr uint32_t kTouchDebounceMs = 250;
+constexpr uint32_t kSetupHoldMs = 2000;  // BOOT pressionado por esse tempo abre a configuração do Wi-Fi
 
 BoardDisplay display;
 LGFX_Sprite canvas(&display);
@@ -26,6 +22,7 @@ LGFX_Sprite canvas(&display);
 ui::DashboardState state;
 SemaphoreHandle_t stateMutex;
 volatile uint32_t stateRevision = 0;
+volatile bool networkPaused = false;
 
 ui::Screen activeScreens[sizeof(config::kScreens) / sizeof(config::kScreens[0])];
 uint8_t activeScreenCount = 0;
@@ -86,7 +83,7 @@ void selectActiveScreens() {
 
 void networkTask(void*) {
   for (;;) {
-    if (WiFi.status() == WL_CONNECTED && isTimeSynced()) {
+    if (!networkPaused && WiFi.status() == WL_CONNECTED && isTimeSynced()) {
       for (Service& service : services) {
         if (!service.enabled || static_cast<int32_t>(millis() - service.nextRunMs) < 0) continue;
         const bool ok = service.run();
@@ -134,6 +131,23 @@ void renderMessage(const char* title, const char* detail) {
   canvas.pushSprite(0, 0);
 }
 
+void runWifiSetup() {
+  networkPaused = true;
+  wifi_setup::run(display, canvas);
+  networkPaused = false;
+}
+
+// BOOT mantido pressionado abre a configuração do Wi-Fi
+bool isSetupRequested() {
+  static uint32_t pressedSinceMs = 0;
+  if (digitalRead(pins::kBootButton) != LOW) {
+    pressedSinceMs = 0;
+    return false;
+  }
+  if (pressedSinceMs == 0) pressedSinceMs = millis();
+  return millis() - pressedSinceMs > kSetupHoldMs;
+}
+
 }  // namespace
 
 void setup() {
@@ -148,7 +162,6 @@ void setup() {
   canvas.setPsram(true);
   canvas.setColorDepth(16);
   canvas.createSprite(display.width(), display.height());
-  renderMessage("Conectando", secrets::kWifiSsid);
 
   state.city = config::kCityName;
   state.newsSource = config::kNewsSource;
@@ -156,9 +169,16 @@ void setup() {
   state.repo.name = config::kGithubRepo;
   selectActiveScreens();
 
+  String ssid;
+  String password;
   WiFi.mode(WIFI_STA);
   WiFi.setAutoReconnect(true);
-  WiFi.begin(secrets::kWifiSsid, secrets::kWifiPassword);
+  if (wifi_setup::loadCredentials(ssid, password)) {
+    renderMessage("Conectando", "Segure BOOT para trocar a rede");
+    WiFi.begin(ssid.c_str(), password.c_str());
+  } else {
+    wifi_setup::run(display, canvas);
+  }
   configTzTime(config::kTimezone, config::kNtpServer, "pool.ntp.org");
 
   stateMutex = xSemaphoreCreateMutex();
@@ -172,6 +192,10 @@ void loop() {
   static bool ready = false;
 
   delay(20);
+  if (isSetupRequested()) {
+    runWifiSetup();
+    ready = false;
+  }
   if (!isTimeSynced()) {
     if (WiFi.status() == WL_CONNECTED) renderMessage("Sincronizando", "Ajustando data e hora");
     delay(500);
