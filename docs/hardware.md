@@ -25,6 +25,7 @@ Resumo do manual técnico (LCDWIKI, *ES3C28P&ES3N28P Specification*, V1.0) com o
 | Toque reset | 18 | ativo em nível baixo |
 | Toque interrupção | 17 | |
 | Amplificador de áudio | 1 | baixo = ligado; o firmware mantém desligado |
+| Tensão da bateria | 9 | ADC, por divisor resistivo |
 | Botão BOOT | 0 | usado para avançar de tela |
 
 ## Pinos disponíveis e não usados
@@ -33,7 +34,6 @@ Resumo do manual técnico (LCDWIKI, *ES3C28P&ES3N28P Specification*, V1.0) com o
 |---|---|
 | LED RGB (WS2812) | 42 |
 | Cartão microSD (SDIO) | 38 CLK, 40 CMD, 39 D0, 41 D1, 48 D2, 47 D3 |
-| Tensão da bateria (ADC) | 9 |
 | Áudio I2S | 4 MCLK, 5 BCLK, 6 DOUT, 7 LRCK, 8 DIN |
 | Serial | 43 TX, 44 RX |
 | Expansão | 2, 3, 14, 21 |

@@ -16,7 +16,7 @@ namespace {
 
 constexpr int kWidth = 320;
 constexpr int kHeight = 240;
-constexpr uint8_t kScreenCount = 14;
+constexpr uint8_t kScreenCount = 12;
 
 LGFX_Sprite canvas;
 std::string outputDir;
@@ -103,15 +103,6 @@ int main(int argc, char** argv) {
   state.radar = {{{"GLO1513", "B38M", 19.0f, 269, 2034}, {"TAM3321", "A320", 31.5f, 40, 5200},
                   {"AZU4410", "E195", 12.2f, 150, 900}, {"PTABC", "C172", 36.0f, 310, 450}}, 4, 16, 40, true};
   state.repo = {"espressif/arduino-esp32", 15234, 412, 37, BuildState::Passed, true};
-  state.status.count = 4;
-  state.status.items[0] = {"GitHub", "Operacional", HealthLevel::Ok, true};
-  state.status.items[1] = {"Cloudflare", "Operacional", HealthLevel::Ok, true};
-  state.status.items[2] = {"Vercel", "Operacional", HealthLevel::Ok, true};
-  state.status.items[3] = {"OpenAI", "Operacional", HealthLevel::Ok, true};
-  state.services.count = 3;
-  state.services.items[0] = {"Site", "142 ms", HealthLevel::Ok, true};
-  state.services.items[1] = {"API", "1.980 ms", HealthLevel::Warning, true};
-  state.services.items[2] = {"Loja", "Fora do ar", HealthLevel::Down, true};
 
   const ui::NetworkEntry networks[] = {{"Casa 2.4G", -48, true}, {"Vizinho", -67, true}, {"Cafeteria Livre", -72, false},
                                        {"Escritório", -80, true}, {"IoT", -88, true}, {"Outra", -90, true}};
@@ -132,14 +123,14 @@ int main(int argc, char** argv) {
     return 1;
   }
 
+  state.battery = {3.98f, 76, BatteryTrend::Discharging, -18.0f, 253, true};
+  save(ui::Screen::Battery, state, "battery");
+  state.battery = {4.12f, 91, BatteryTrend::Charging, 32.0f, 17, true};
+  save(ui::Screen::Battery, state, "alt_battery_charging");
   save(ui::Screen::Match, state, "match");
   save(ui::Screen::HackerNews, state, "hacker_news");
   save(ui::Screen::Radar, state, "radar");
   save(ui::Screen::Repo, state, "repo");
-  save(ui::Screen::Status, state, "status");
-  save(ui::Screen::Services, state, "services");
-  for (int frame = 0; frame < 90; ++frame) ui::drawFireScreen(canvas);
-  save(ui::Screen::Fire, state, "fire");
   save(ui::Screen::Weather, state, "weather");
   save(ui::Screen::Currency, state, "currency");
   save(ui::Screen::Crypto, state, "crypto");

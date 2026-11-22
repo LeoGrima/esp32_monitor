@@ -21,9 +21,7 @@ void drawScreen(LovyanGFX& gfx, Screen screen, const DashboardState& state) {
     case Screen::Match:    drawMatchScreen(gfx, state.match); break;
     case Screen::Radar:    drawRadarScreen(gfx, state.radar); break;
     case Screen::Repo:     drawRepoScreen(gfx, state.repo); break;
-    case Screen::Status:   drawStatusScreen(gfx, state.status, "Status"); break;
-    case Screen::Services: drawStatusScreen(gfx, state.services, "Serviços"); break;
-    case Screen::Fire:     drawFireScreen(gfx); break;
+    case Screen::Battery:  drawBatteryScreen(gfx, state.battery); break;
     case Screen::Video:    drawVideoScreen(gfx, state.video, state.nowEpoch); break;
     case Screen::Clock:    drawClockScreen(gfx, state.now, state.southernHemisphere); break;
   }

@@ -37,9 +37,6 @@ bool parseScoreboard(const char* json, const char* favoriteTeam, MatchData& matc
 // adsb.lol: aeronaves ordenadas por distância
 bool parseAircraft(const char* json, RadarData& radar);
 
-// Páginas de status no padrão Statuspage
-bool parseStatusPage(const char* json, StatusItem& item);
-
 // GitHub
 bool parseRepo(const char* json, RepoData& repo);
 bool parseSearchCount(const char* json, uint32_t& count);

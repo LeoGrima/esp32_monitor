@@ -9,7 +9,6 @@ constexpr uint8_t kNewsVisible = 3;
 constexpr uint8_t kNewsTitleSize = 160;
 constexpr uint8_t kMaxOtherMatches = 2;
 constexpr uint8_t kMaxAircraft = 8;
-constexpr uint8_t kMaxStatusItems = 4;
 
 struct CurrencyQuote {
   float bid = 0;
@@ -121,18 +120,15 @@ struct RepoData {
   bool valid = false;
 };
 
-enum class HealthLevel : uint8_t { Ok, Warning, Down };
+enum class BatteryTrend : uint8_t { Unknown, Stable, Charging, Discharging };
 
-struct StatusItem {
-  const char* label = "";
-  char detail[24] = "";
-  HealthLevel level = HealthLevel::Ok;
+struct BatteryData {
+  float voltage = 0;
+  uint8_t percent = 0;
+  BatteryTrend trend = BatteryTrend::Unknown;
+  float ratePerHour = 0;          // variação da carga, em % por hora
+  int32_t minutesRemaining = -1;  // até esvaziar ou até 100%; -1 = ainda sem estimativa
   bool valid = false;
-};
-
-struct StatusData {
-  StatusItem items[kMaxStatusItems];
-  uint8_t count = 0;
 };
 
 struct Place {

@@ -11,7 +11,7 @@ namespace config {
 constexpr ui::Screen kScreens[] = {
     ui::Screen::Clock, ui::Screen::Weather, ui::Screen::Currency,   ui::Screen::Crypto, ui::Screen::Stocks,
     ui::Screen::Match, ui::Screen::News,    ui::Screen::HackerNews, ui::Screen::Video,  ui::Screen::Radar,
-    ui::Screen::Repo,  ui::Screen::Status,  ui::Screen::Services,   ui::Screen::Fire};
+    ui::Screen::Repo,  ui::Screen::Battery};
 constexpr uint32_t kScreenRotationSeconds = 15;  // 0 = troca apenas pelo toque
 
 // Tela
@@ -19,6 +19,10 @@ constexpr uint8_t kDisplayRotation = 1;  // paisagem: 1 ou 3 (invertida)
 constexpr bool kDisplayInvertColors = true;  // painel IPS; troque se as cores saírem negativas
 constexpr uint8_t kTouchRotationOffset = 2;  // 0 a 3: alinha o toque com a imagem (2 = 180 graus)
 constexpr uint8_t kBrightness = 200;     // 0 a 255
+
+// Bateria: a tensão chega ao ADC por um divisor resistivo. Se a tensão exibida não bater com a de um
+// multímetro, ajuste: novo valor = valor atual x (tensão real / tensão exibida)
+constexpr float kBatteryDividerRatio = 2.0f;
 
 // Data e hora
 constexpr char kTimezone[] = "<-04>4";  // Cuiabá/MT, UTC-4 (formato POSIX; Brasília seria "<-03>3")
@@ -68,18 +72,6 @@ constexpr float kRadarRadiusKm = 40;
 // Repositório (GitHub, público): dono/nome
 constexpr char kGithubRepo[] = "espressif/arduino-esp32";
 
-// Páginas de status (padrão Statuspage) e serviços monitorados (https), até 4 de cada
-struct Endpoint {
-  const char* label;
-  const char* url;
-};
-constexpr Endpoint kStatusPages[] = {{"GitHub", "https://www.githubstatus.com"},
-                                     {"Cloudflare", "https://www.cloudflarestatus.com"},
-                                     {"Vercel", "https://www.vercel-status.com"},
-                                     {"OpenAI", "https://status.openai.com"}};
-constexpr Endpoint kMonitoredSites[] = {{"Google", "https://www.google.com"}, {"GitHub", "https://github.com"}};
-constexpr uint32_t kSlowResponseMs = 3000;  // inclui a negociação TLS feita pelo ESP32
-
 // Intervalos de atualização
 constexpr uint32_t kMinuteMs = 60UL * 1000;
 constexpr uint32_t kWeatherIntervalMs = 15 * kMinuteMs;
@@ -92,8 +84,6 @@ constexpr uint32_t kHackerNewsIntervalMs = 5 * kMinuteMs;
 constexpr uint32_t kMatchIntervalMs = 1 * kMinuteMs;
 constexpr uint32_t kRadarIntervalMs = 1 * kMinuteMs;
 constexpr uint32_t kRepoIntervalMs = 10 * kMinuteMs;  // a API sem token permite 60 consultas por hora
-constexpr uint32_t kStatusIntervalMs = 5 * kMinuteMs;
-constexpr uint32_t kServicesIntervalMs = 2 * kMinuteMs;
 constexpr uint32_t kRetryIntervalMs = 30UL * 1000;
 
 }  // namespace config

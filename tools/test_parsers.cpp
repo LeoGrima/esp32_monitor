@@ -1,6 +1,6 @@
 // Testa os parsers no PC com respostas de exemplo (ou reais, salvas em arquivo).
 // Uso: test_parsers [pasta com weather.json, ptax.json, crypto.json, stock.json, news.xml, video.xml,
-//                    stories.json, story.json, scoreboard.json, aircraft.json, status.json, repo.json]
+//                    stories.json, story.json, scoreboard.json, aircraft.json, repo.json]
 #include <cassert>
 #include <cmath>
 #include <cstdio>
@@ -10,6 +10,7 @@
 #include <string>
 
 #include "data/data_parsers.h"
+#include "power/battery_estimator.h"
 
 namespace {
 
@@ -61,8 +62,6 @@ constexpr char kScoreboard[] = R"({"leagues":[{"name":"Brazilian Serie A"}],"eve
 
 constexpr char kAircraft[] = R"({"ac":[{"flight":"TAM3321 ","t":"A320","alt_baro":17000,"dst":17.0,"dir":40.5},
 {"flight":"GLO1513 ","t":"B38M","alt_baro":"ground","dst":5.4,"dir":269.3},{"hex":"x"}],"total":3})";
-
-constexpr char kStatus[] = R"({"page":{"name":"GitHub"},"status":{"indicator":"minor","description":"Minor Service Outage"}})";
 
 constexpr char kRepo[] = R"({"full_name":"a/b","stargazers_count":15234,"open_issues_count":449,"forks_count":7})";
 
@@ -152,11 +151,6 @@ int main(int argc, char** argv) {
     assert(near(radar.items[0].distanceKm, 10.0f) && radar.items[0].altitudeM == 0 && radar.items[1].altitudeM == 5181);
   }
 
-  StatusItem status;
-  assert(parsers::parseStatusPage(load(dir, "status.json", kStatus).c_str(), status));
-  printf("status: %s (nivel %d)\n", status.detail, static_cast<int>(status.level));
-  if (samples) assert(status.level == HealthLevel::Warning);
-
   RepoData repo;
   assert(parsers::parseRepo(load(dir, "repo.json", kRepo).c_str(), repo));
   uint32_t pulls = 0;
@@ -166,6 +160,20 @@ int main(int argc, char** argv) {
   assert(build == BuildState::Failed);
   printf("repositorio: %u estrelas, %u issues\n", repo.stars, repo.openIssues);
   if (samples) assert(repo.stars == 15234);
+
+  // Bateria: 30 minutos descarregando de 4,02 V (80%) para 3,95 V (70%)
+  BatteryEstimator estimator;
+  assert(near(BatteryEstimator::percentFromVoltage(4.3f), 100) && near(BatteryEstimator::percentFromVoltage(3.0f), 0));
+  assert(near(BatteryEstimator::percentFromVoltage(3.84f), 50));
+  for (uint32_t second = 0; second <= 1800; second += 2) {
+    estimator.addSample(4.02f - 0.07f * second / 1800.0f, second * 1000);
+  }
+  const BatteryData batteryData = estimator.data();
+  printf("bateria: %.2f V, %u%%, %.1f %%/h, %ld min restantes\n", batteryData.voltage, batteryData.percent,
+         batteryData.ratePerHour, static_cast<long>(batteryData.minutesRemaining));
+  assert(batteryData.trend == BatteryTrend::Discharging && batteryData.percent >= 69 && batteryData.percent <= 71);
+  assert(batteryData.ratePerHour < -15 && batteryData.ratePerHour > -25);
+  assert(batteryData.minutesRemaining > 170 && batteryData.minutesRemaining < 280);
 
   puts("OK");
   return 0;

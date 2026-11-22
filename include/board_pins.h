@@ -15,6 +15,8 @@ constexpr int kTouchScl = 15;
 constexpr int kTouchReset = 18;
 constexpr int kTouchInterrupt = 17;
 
+constexpr int kBatteryAdc = 9;
+
 constexpr int kAudioAmpEnable = 1;  // ativo em nível baixo
 constexpr int kBootButton = 0;
 

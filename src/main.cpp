@@ -6,6 +6,7 @@
 #include "data/data_services.h"
 #include "display/board_display.h"
 #include "net/wifi_setup.h"
+#include "power/battery_monitor.h"
 #include "ui/ui_screens.h"
 #include "ui/ui_widgets.h"
 
@@ -67,8 +68,6 @@ Service services[] = {
     {ui::Screen::Match, config::kMatchIntervalMs, [] { return refresh(&ui::DashboardState::match, services::fetchMatch); }},
     {ui::Screen::Radar, config::kRadarIntervalMs, [] { return refresh(&ui::DashboardState::radar, services::fetchRadar); }},
     {ui::Screen::Repo, config::kRepoIntervalMs, [] { return refresh(&ui::DashboardState::repo, services::fetchRepo); }},
-    {ui::Screen::Status, config::kStatusIntervalMs, [] { return refresh(&ui::DashboardState::status, services::fetchStatus); }},
-    {ui::Screen::Services, config::kServicesIntervalMs, [] { return refresh(&ui::DashboardState::services, services::fetchSites); }},
 };
 
 bool isTimeSynced() { return time(nullptr) > kValidEpoch; }
@@ -174,6 +173,8 @@ void setup() {
   digitalWrite(pins::kAudioAmpEnable, HIGH);  // amplificador desligado
   pinMode(pins::kBootButton, INPUT_PULLUP);
 
+  battery::begin();
+
   display.init();
   display.setRotation(config::kDisplayRotation);
   display.setBrightness(config::kBrightness);
@@ -234,7 +235,7 @@ void loop() {
 
   const time_t now = time(nullptr);
   const bool isClock = activeScreens[currentScreen] == ui::Screen::Clock;
-  dirty |= activeScreens[currentScreen] == ui::Screen::Fire;  // animação contínua
+  dirty |= battery::update(state.battery) && activeScreens[currentScreen] == ui::Screen::Battery;
   dirty |= stateRevision != lastRevision;
   dirty |= isClock ? now != lastRenderedSecond : now / 60 != lastRenderedSecond / 60;
   if (!dirty) return;

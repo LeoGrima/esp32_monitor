@@ -239,36 +239,4 @@ bool fetchRepo(RepoData& repo) {
   return true;
 }
 
-bool fetchStatus(StatusData& status) {
-  status.count = 0;
-  for (const config::Endpoint& page : config::kStatusPages) {
-    if (status.count == kMaxStatusItems) break;
-    StatusItem& item = status.items[status.count++];
-    item.label = page.label;
-    String url = String(page.url) + "/api/v2/status.json";
-    String body;
-    item.valid = http::get(url.c_str(), body) && parsers::parseStatusPage(body.c_str(), item);
-  }
-  return true;
-}
-
-bool fetchSites(StatusData& sites) {
-  sites.count = 0;
-  for (const config::Endpoint& site : config::kMonitoredSites) {
-    if (sites.count == kMaxStatusItems) break;
-    StatusItem& item = sites.items[sites.count++];
-    uint32_t elapsedMs = 0;
-    item.label = site.label;
-    item.valid = true;
-    if (http::probe(site.url, elapsedMs)) {
-      snprintf(item.detail, sizeof(item.detail), "%lu ms", static_cast<unsigned long>(elapsedMs));
-      item.level = elapsedMs > config::kSlowResponseMs ? HealthLevel::Warning : HealthLevel::Ok;
-    } else {
-      snprintf(item.detail, sizeof(item.detail), "Fora do ar");
-      item.level = HealthLevel::Down;
-    }
-  }
-  return true;
-}
-
 }  // namespace services

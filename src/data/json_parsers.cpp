@@ -246,31 +246,6 @@ bool parseAircraft(const char* json, RadarData& radar) {
   return true;
 }
 
-bool parseStatusPage(const char* json, StatusItem& item) {
-  struct Level {
-    const char* indicator;
-    const char* label;
-    HealthLevel level;
-  };
-  constexpr Level kLevels[] = {{"none", "Operacional", HealthLevel::Ok},
-                               {"minor", "Instabilidade", HealthLevel::Warning},
-                               {"maintenance", "Manutenção", HealthLevel::Warning},
-                               {"major", "Incidente grave", HealthLevel::Down},
-                               {"critical", "Fora do ar", HealthLevel::Down}};
-  JsonDocument doc;
-  if (deserializeJson(doc, json)) return false;
-  const char* indicator = doc["status"]["indicator"];
-  if (indicator == nullptr) return false;
-  for (const Level& level : kLevels) {
-    if (strcmp(indicator, level.indicator) != 0) continue;
-    snprintf(item.detail, sizeof(item.detail), "%s", level.label);
-    item.level = level.level;
-    item.valid = true;
-    return true;
-  }
-  return false;
-}
-
 bool parseRepo(const char* json, RepoData& repo) {
   JsonDocument filter;
   filter["stargazers_count"] = filter["open_issues_count"] = true;

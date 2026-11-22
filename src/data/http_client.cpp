@@ -37,16 +37,6 @@ bool get(const char* url, String& body) {
   return body.length() > 0;
 }
 
-bool probe(const char* url, uint32_t& elapsedMs) {
-  const uint32_t start = millis();
-  WiFiClientSecure transport;
-  HTTPClient client;
-  const bool ok = begin(client, transport, url);
-  elapsedMs = millis() - start;
-  if (ok) client.end();
-  return ok;
-}
-
 size_t download(const char* url, uint8_t* buffer, size_t capacity) {
   WiFiClientSecure transport;
   HTTPClient client;

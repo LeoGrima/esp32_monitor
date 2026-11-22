@@ -21,7 +21,5 @@ bool fetchHackerNews(NewsData& news);
 bool fetchMatch(MatchData& match);
 bool fetchRadar(RadarData& radar);
 bool fetchRepo(RepoData& repo);
-bool fetchStatus(StatusData& status);
-bool fetchSites(StatusData& sites);
 
 }  // namespace services
