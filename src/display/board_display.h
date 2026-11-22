@@ -51,6 +51,7 @@ class BoardDisplay : public lgfx::LGFX_Device {
       cfg.freq = 400000;
       cfg.x_max = 239;
       cfg.y_max = 319;
+      cfg.offset_rotation = config::kTouchRotationOffset;
       cfg.bus_shared = false;
       touch_.config(cfg);
       panel_.setTouch(&touch_);

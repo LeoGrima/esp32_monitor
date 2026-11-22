@@ -17,6 +17,7 @@ constexpr uint32_t kScreenRotationSeconds = 15;  // 0 = troca apenas pelo toque
 // Tela
 constexpr uint8_t kDisplayRotation = 1;  // paisagem: 1 ou 3 (invertida)
 constexpr bool kDisplayInvertColors = true;  // painel IPS; troque se as cores saírem negativas
+constexpr uint8_t kTouchRotationOffset = 2;  // 0 a 3: alinha o toque com a imagem (2 = 180 graus)
 constexpr uint8_t kBrightness = 200;     // 0 a 255
 
 // Data e hora
