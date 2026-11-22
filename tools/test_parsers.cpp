@@ -72,6 +72,11 @@ int main(int argc, char** argv) {
   const std::string dir = argc > 1 ? argv[1] : "";
   const bool samples = dir.empty();
 
+  Place place;
+  assert(parsers::parseLocation(R"({"success":true,"city":"Curitiba","latitude":-25.4284,"longitude":-49.2733})", place));
+  assert(strcmp(place.city, "Curitiba") == 0 && near(place.latitude, -25.4284f) && near(place.longitude, -49.2733f));
+  assert(!parsers::parseLocation(R"({"success":false,"message":"Invalid IP address"})", place));
+
   WeatherData weather;
   assert(parsers::parseWeather(load(dir, "weather.json", kWeather).c_str(), weather));
   printf("clima: %.1f graus (max %.1f, min %.1f), codigo %u, chuva %u%%, dia=%d\n", weather.temperature,

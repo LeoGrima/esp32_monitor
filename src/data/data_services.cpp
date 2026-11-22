@@ -38,7 +38,28 @@ bool fetchPtax(const char* currencyCode, CurrencyQuote& quote, float* week, uint
   return http::get(url, body) && parsers::parsePtax(body.c_str(), quote, week, weekCount, updatedAt);
 }
 
+Place& place() {
+  static Place instance = [] {
+    Place fallback;
+    snprintf(fallback.city, sizeof(fallback.city), "%s", config::kCityName);
+    fallback.latitude = config::kLatitude;
+    fallback.longitude = config::kLongitude;
+    return fallback;
+  }();
+  return instance;
+}
+
 }  // namespace
+
+const Place& currentPlace() { return place(); }
+
+void setPlace(const Place& detected) { place() = detected; }
+
+bool detectPlace(Place& detected) {
+  String body;
+  return http::get("https://ipwho.is/?fields=success,city,latitude,longitude", body) &&
+         parsers::parseLocation(body.c_str(), detected);
+}
 
 bool fetchWeather(WeatherData& weather) {
   char url[320];
@@ -46,7 +67,7 @@ bool fetchWeather(WeatherData& weather) {
            "https://api.open-meteo.com/v1/forecast?latitude=%.4f&longitude=%.4f"
            "&current=temperature_2m,weather_code,is_day&hourly=precipitation_probability&forecast_hours=12"
            "&daily=temperature_2m_max,temperature_2m_min&forecast_days=1&timezone=auto",
-           config::kLatitude, config::kLongitude);
+           place().latitude, place().longitude);
   String body;
   return http::get(url, body) && parsers::parseWeather(body.c_str(), weather);
 }
@@ -192,7 +213,7 @@ bool fetchMatch(MatchData& match) {
 
 bool fetchRadar(RadarData& radar) {
   char url[96];
-  snprintf(url, sizeof(url), "https://api.adsb.lol/v2/point/%.4f/%.4f/%.0f", config::kLatitude, config::kLongitude,
+  snprintf(url, sizeof(url), "https://api.adsb.lol/v2/point/%.4f/%.4f/%.0f", place().latitude, place().longitude,
            config::kRadarRadiusKm / kKmPerNauticalMile);
   radar.radiusKm = config::kRadarRadiusKm;
   String body;

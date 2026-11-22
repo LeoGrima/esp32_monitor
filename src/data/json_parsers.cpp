@@ -11,6 +11,17 @@ namespace parsers {
 
 constexpr uint8_t kDeepNesting = 24;  // respostas da ESPN e do Yahoo são bem aninhadas
 
+bool parseLocation(const char* json, Place& place) {
+  JsonDocument doc;
+  if (deserializeJson(doc, json) || !(doc["success"] | false)) return false;
+  const char* city = doc["city"];
+  if (city == nullptr || doc["latitude"].isNull() || doc["longitude"].isNull()) return false;
+  snprintf(place.city, sizeof(place.city), "%s", city);
+  place.latitude = doc["latitude"];
+  place.longitude = doc["longitude"];
+  return true;
+}
+
 bool parseWeather(const char* json, WeatherData& weather) {
   JsonDocument doc;
   if (deserializeJson(doc, json)) return false;

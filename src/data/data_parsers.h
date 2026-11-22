@@ -15,6 +15,9 @@ struct VideoEntry {
   long long publishedAt;
 };
 
+// Geolocalização pelo IP (ipwho.is)
+bool parseLocation(const char* json, Place& place);
+
 bool parseWeather(const char* json, WeatherData& weather);
 
 // PTAX: preenche a cotação e, se informados, o histórico diário e a hora do último boletim

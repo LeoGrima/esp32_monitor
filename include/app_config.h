@@ -25,7 +25,10 @@ constexpr char kTimezone[] = "<-03>3";  // horário de Brasília (formato POSIX)
 constexpr char kNtpServer[] = "a.st1.ntp.br";
 constexpr bool kSouthernHemisphere = true;
 
-// Local: usado pelo clima (Open-Meteo) e pelo radar de aeronaves (adsb.lol)
+// Local: usado pelo clima (Open-Meteo) e pelo radar de aeronaves (adsb.lol).
+// Com a detecção ligada, cidade e coordenadas vêm do endereço de rede (ipwho.is);
+// os valores abaixo valem enquanto a detecção não responde ou se ela estiver desligada.
+constexpr bool kDetectLocation = true;
 constexpr char kCityName[] = "São Paulo";
 constexpr float kLatitude = -23.5505f;
 constexpr float kLongitude = -46.6333f;

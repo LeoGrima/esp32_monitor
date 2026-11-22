@@ -6,6 +6,11 @@
 // nesse caso o conteúdo anterior é mantido.
 namespace services {
 
+// Local usado pelo clima e pelo radar: o de app_config.h até ser detectado pela rede
+const Place& currentPlace();
+void setPlace(const Place& place);
+bool detectPlace(Place& place);
+
 bool fetchWeather(WeatherData& weather);
 bool fetchCurrency(CurrencyData& currency);
 bool fetchCrypto(CryptoData& crypto);

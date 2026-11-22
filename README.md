@@ -48,7 +48,8 @@ Se a porta não aparecer, entre em modo de gravação: segure **BOOT**, pression
 | `kScreens` | Telas exibidas e a ordem |
 | `kScreenRotationSeconds` | Tempo por tela (`0` = só pelo toque) |
 | `kDisplayRotation`, `kBrightness` | Orientação (1 ou 3) e brilho |
-| `kCityName`, `kLatitude`, `kLongitude` | Local do clima |
+| `kDetectLocation` | Detecta a cidade pelo endereço de rede (ipwho.is) |
+| `kCityName`, `kLatitude`, `kLongitude` | Local usado se a detecção estiver desligada ou falhar |
 | `kTimezone`, `kSouthernHemisphere` | Fuso horário e estação do ano |
 | `kCoins`, `kCryptoCurrency` | Moedas da tela Cripto |
 | `kStocks` | Ativos da tela Bolsa (ações da B3 terminam em `.SA`) |

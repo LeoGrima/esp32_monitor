@@ -81,9 +81,27 @@ void selectActiveScreens() {
   }
 }
 
+// Detecta o local pela rede e refaz as consultas que dependem dele
+void updatePlace() {
+  static uint32_t nextAttemptMs = 0;
+  static bool detected = !config::kDetectLocation;
+  if (detected || static_cast<int32_t>(millis() - nextAttemptMs) < 0) return;
+  nextAttemptMs = millis() + config::kRetryIntervalMs;
+
+  Place place;
+  if (!services::detectPlace(place)) return;
+  detected = true;
+  StateLock lock;  // a tela lê o nome da cidade
+  services::setPlace(place);
+  for (Service& service : services) {
+    if (service.screen == ui::Screen::Weather || service.screen == ui::Screen::Radar) service.nextRunMs = millis();
+  }
+}
+
 void networkTask(void*) {
   for (;;) {
     if (!networkPaused && WiFi.status() == WL_CONNECTED && isTimeSynced()) {
+      updatePlace();
       for (Service& service : services) {
         if (!service.enabled || static_cast<int32_t>(millis() - service.nextRunMs) < 0) continue;
         const bool ok = service.run();
@@ -163,7 +181,7 @@ void setup() {
   canvas.setColorDepth(16);
   canvas.createSprite(display.width(), display.height());
 
-  state.city = config::kCityName;
+  state.city = services::currentPlace().city;
   state.newsSource = config::kNewsSource;
   state.southernHemisphere = config::kSouthernHemisphere;
   state.repo.name = config::kGithubRepo;

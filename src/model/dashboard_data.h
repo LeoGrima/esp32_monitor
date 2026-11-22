@@ -135,6 +135,12 @@ struct StatusData {
   uint8_t count = 0;
 };
 
+struct Place {
+  char city[32] = "";
+  float latitude = 0;
+  float longitude = 0;
+};
+
 struct WeatherData {
   float temperature = 0;
   float tempMax = 0;
