@@ -44,7 +44,7 @@ bool refresh(T ui::DashboardState::*field, bool (*fetch)(T&)) {
   if (!fetch(data)) return false;
   StateLock lock;
   state.*field = data;
-  ++stateRevision;
+  stateRevision = stateRevision + 1;
   return true;
 }
 
