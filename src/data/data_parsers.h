@@ -1,0 +1,51 @@
+#pragma once
+
+#include <stddef.h>
+
+#include "../model/dashboard_data.h"
+
+// Interpretação das respostas das APIs. Sem dependência de hardware: também roda no PC.
+namespace parsers {
+
+constexpr uint8_t kFeedTitleSize = kNewsTitleSize;
+
+struct VideoEntry {
+  char title[96];
+  char id[16];
+  long long publishedAt;
+};
+
+bool parseWeather(const char* json, WeatherData& weather);
+
+// PTAX: preenche a cotação e, se informados, o histórico diário e a hora do último boletim
+bool parsePtax(const char* json, CurrencyQuote& quote, float* week = nullptr, uint8_t* weekCount = nullptr,
+               char* updatedAt = nullptr);
+
+bool parseCoin(const char* json, const char* coinId, const char* currency, CoinQuote& coin);
+bool parseStock(const char* json, StockQuote& stock);
+
+// Hacker News
+uint8_t parseStoryIds(const char* json, uint32_t* ids, uint8_t maxIds);
+bool parseStory(const char* json, char* title, size_t titleSize, uint32_t& score, uint32_t& comments);
+
+// ESPN: destaca o jogo do time informado (ou o primeiro da rodada)
+bool parseScoreboard(const char* json, const char* favoriteTeam, MatchData& match);
+
+// adsb.lol: aeronaves ordenadas por distância
+bool parseAircraft(const char* json, RadarData& radar);
+
+// Páginas de status no padrão Statuspage
+bool parseStatusPage(const char* json, StatusItem& item);
+
+// GitHub
+bool parseRepo(const char* json, RepoData& repo);
+bool parseSearchCount(const char* json, uint32_t& count);
+bool parseWorkflowRun(const char* json, BuildState& build);
+
+// "AAAA-MM-DDTHH:MM[:SS]" (UTC) -> epoch
+long long parseIsoDate(const char* text);
+
+uint8_t parseNewsFeed(const char* xml, char titles[][kFeedTitleSize], uint8_t maxTitles);
+uint8_t parseVideoFeed(const char* xml, VideoEntry* entries, uint8_t maxEntries, char* channel, size_t channelSize);
+
+}  // namespace parsers

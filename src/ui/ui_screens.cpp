@@ -1,0 +1,43 @@
+#include "ui_screens.h"
+
+#include "fonts/ui_fonts.h"
+#include "ui_theme.h"
+#include "ui_widgets.h"
+
+namespace ui {
+
+void drawScreen(LovyanGFX& gfx, Screen screen, const DashboardState& state) {
+  switch (screen) {
+    case Screen::Weather:  drawWeatherScreen(gfx, state.weather, state.city); break;
+    case Screen::Currency: drawCurrencyScreen(gfx, state.currency); break;
+    case Screen::Crypto:   drawCryptoScreen(gfx, state.crypto); break;
+    case Screen::Stocks:   drawStocksScreen(gfx, state.stocks); break;
+    case Screen::News:
+      drawHeadlineScreen(gfx, state.news, {"MANCHETE", state.newsSource, "Aguardando notícias", 0xE5383Bu, 0x3A0E14u, 0x140A0Du});
+      break;
+    case Screen::HackerNews:
+      drawHeadlineScreen(gfx, state.hackerNews, {"TOPO", "Hacker News", "Aguardando o Hacker News", 0xFF7A1Au, 0x3A1E08u, 0x140C06u});
+      break;
+    case Screen::Match:    drawMatchScreen(gfx, state.match); break;
+    case Screen::Radar:    drawRadarScreen(gfx, state.radar); break;
+    case Screen::Repo:     drawRepoScreen(gfx, state.repo); break;
+    case Screen::Status:   drawStatusScreen(gfx, state.status, "Status"); break;
+    case Screen::Services: drawStatusScreen(gfx, state.services, "Serviços"); break;
+    case Screen::Fire:     drawFireScreen(gfx); break;
+    case Screen::Video:    drawVideoScreen(gfx, state.video, state.nowEpoch); break;
+    case Screen::Clock:    drawClockScreen(gfx, state.now, state.southernHemisphere); break;
+  }
+}
+
+void drawMessage(LovyanGFX& gfx, const char* title, const char* detail) {
+  fillBackground(gfx, color::kNightTop, color::kNightBottom);
+  gfx.setTextDatum(lgfx::middle_center);
+  gfx.setTextColor(color::kText);
+  gfx.setFont(&fonts().large);
+  gfx.drawString(title, gfx.width() / 2, gfx.height() / 2 - 16);
+  gfx.setTextColor(color::kTextMuted);
+  gfx.setFont(&fonts().medium);
+  gfx.drawString(detail, gfx.width() / 2, gfx.height() / 2 + 20);
+}
+
+}  // namespace ui
