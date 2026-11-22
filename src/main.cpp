@@ -66,8 +66,6 @@ Service services[] = {
     {ui::Screen::News, config::kNewsIntervalMs, [] { return refresh(&ui::DashboardState::news, services::fetchNews); }},
     {ui::Screen::Video, config::kVideoIntervalMs, [] { return refresh(&ui::DashboardState::video, services::fetchVideo); }},
     {ui::Screen::HackerNews, config::kHackerNewsIntervalMs, [] { return refresh(&ui::DashboardState::hackerNews, services::fetchHackerNews); }},
-    {ui::Screen::Radar, config::kRadarIntervalMs, [] { return refresh(&ui::DashboardState::radar, services::fetchRadar); }},
-    {ui::Screen::Repo, config::kRepoIntervalMs, [] { return refresh(&ui::DashboardState::repo, services::fetchRepo); }},
 };
 
 bool isTimeSynced() { return time(nullptr) > kValidEpoch; }
@@ -80,7 +78,7 @@ void selectActiveScreens() {
   }
 }
 
-// Detecta o local e o fuso horário pela rede e refaz as consultas que dependem do local
+// Detecta o local e o fuso horário pela rede e refaz a consulta do clima
 void updatePlace() {
   static uint32_t nextAttemptMs = 0;
   static bool detected = !config::kDetectLocation;
@@ -99,7 +97,7 @@ void updatePlace() {
   StateLock lock;  // a tela lê o nome da cidade
   services::setPlace(place);
   for (Service& service : services) {
-    if (service.screen == ui::Screen::Weather || service.screen == ui::Screen::Radar) service.nextRunMs = millis();
+    if (service.screen == ui::Screen::Weather) service.nextRunMs = millis();
   }
 }
 
@@ -191,7 +189,6 @@ void setup() {
   state.city = services::currentPlace().city;
   state.newsSource = config::kNewsSource;
   state.southernHemisphere = config::kSouthernHemisphere;
-  state.repo.name = config::kGithubRepo;
   selectActiveScreens();
 
   String ssid;

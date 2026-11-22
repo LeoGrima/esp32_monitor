@@ -12,8 +12,6 @@ Firmware para o módulo **ES3C28P** (ESP32-S3 + tela IPS 2.8" 240x320 com toque 
 | Notícias | Manchete e duas chamadas seguintes | RSS (g1 por padrão) |
 | Hacker News | Histórias do topo, pontos e comentários | API do Hacker News |
 | YouTube | Vídeos recentes do canal: miniatura, título e idade | RSS do canal |
-| Radar | Aeronaves ao redor, com voo, modelo, distância e altitude | adsb.lol |
-| Repositório | Estrelas, PRs e issues abertos, último CI | API do GitHub |
 | Bateria | Carga, tensão, tempo restante e ritmo de carga ou descarga | ADC do módulo |
 
 Nenhuma das fontes exige chave de API.
@@ -52,8 +50,6 @@ Se a porta não aparecer, entre em modo de gravação: segure **BOOT**, pression
 | `kStocks` | Ativos da tela Bolsa (ações da B3 terminam em `.SA`) |
 | `kNewsFeedUrl`, `kNewsSource` | Feed RSS de notícias |
 | `kYoutubeChannelId` | Canal do YouTube; **vazio desativa a tela** |
-| `kRadarRadiusKm` | Raio do radar em torno de `kLatitude`/`kLongitude` |
-| `kGithubRepo` | Repositório público acompanhado |
 | `kBatteryDividerRatio` | Calibração da leitura de tensão da bateria |
 | `k...IntervalMs` | Intervalos de atualização |
 
@@ -102,7 +98,6 @@ O teste de parsers aceita uma pasta com respostas reais salvas (nomes dos arquiv
 - A PTAX só é publicada em dias úteis; fora do pregão a tela mostra o último boletim.
 - A tela do YouTube mostra os vídeos recentes do canal; reproduzir vídeo não é viável neste hardware.
 - Emojis em títulos são omitidos (a fonte cobre o alfabeto latino com acentos).
-- A API do GitHub sem token aceita 60 consultas por hora por IP; a tela Repositório usa 18.
 - A bateria é estimada só pela tensão: o módulo não tem sinal de "carregando" nem medidor de corrente. A porcentagem fica um pouco alta durante a carga, e o tempo restante aparece depois de alguns minutos de leitura.
 
 ## Apps que dependem de um computador ou de conta

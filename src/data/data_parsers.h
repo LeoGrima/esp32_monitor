@@ -31,14 +31,6 @@ bool parseStock(const char* json, StockQuote& stock);
 uint8_t parseStoryIds(const char* json, uint32_t* ids, uint8_t maxIds);
 bool parseStory(const char* json, char* title, size_t titleSize, uint32_t& score, uint32_t& comments);
 
-// adsb.lol: aeronaves ordenadas por distância
-bool parseAircraft(const char* json, RadarData& radar);
-
-// GitHub
-bool parseRepo(const char* json, RepoData& repo);
-bool parseSearchCount(const char* json, uint32_t& count);
-bool parseWorkflowRun(const char* json, BuildState& build);
-
 // Fuso no formato POSIX a partir do deslocamento em relação ao UTC (ex.: -14400 -> "<-0400>4:00")
 void formatTimezone(int32_t utcOffsetSeconds, char* out, size_t outSize);
 

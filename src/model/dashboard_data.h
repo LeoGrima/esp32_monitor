@@ -7,7 +7,6 @@ constexpr uint8_t kMaxCoins = 4;
 constexpr uint8_t kMaxStocks = 3;
 constexpr uint8_t kNewsVisible = 3;
 constexpr uint8_t kNewsTitleSize = 160;
-constexpr uint8_t kMaxAircraft = 8;
 
 struct CurrencyQuote {
   float bid = 0;
@@ -65,33 +64,6 @@ struct NewsData {
   char detail[40] = "";  // linha complementar (ex.: pontos e comentários)
   uint8_t index = 0;
   uint8_t total = 0;
-  bool valid = false;
-};
-
-struct Aircraft {
-  char flight[10] = "";
-  char type[6] = "";
-  float distanceKm = 0;
-  float bearing = 0;  // graus a partir do norte
-  int32_t altitudeM = 0;
-};
-
-struct RadarData {
-  Aircraft items[kMaxAircraft];  // da mais próxima para a mais distante
-  uint8_t count = 0;
-  uint16_t total = 0;
-  float radiusKm = 0;
-  bool valid = false;
-};
-
-enum class BuildState : uint8_t { Unknown, Passed, Failed, Running };
-
-struct RepoData {
-  const char* name = "";
-  uint32_t stars = 0;
-  uint32_t openIssues = 0;
-  uint32_t openPullRequests = 0;
-  BuildState build = BuildState::Unknown;
   bool valid = false;
 };
 

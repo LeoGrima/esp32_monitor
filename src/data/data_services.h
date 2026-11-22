@@ -6,7 +6,7 @@
 // nesse caso o conteúdo anterior é mantido.
 namespace services {
 
-// Local usado pelo clima e pelo radar: o de app_config.h até ser detectado pela rede
+// Local usado pelo clima: o de app_config.h até ser detectado pela rede
 const Place& currentPlace();
 void setPlace(const Place& place);
 bool detectPlace(Place& place);
@@ -18,7 +18,5 @@ bool fetchStocks(StocksData& stocks);
 bool fetchNews(NewsData& news);
 bool fetchVideo(VideoData& video);
 bool fetchHackerNews(NewsData& news);
-bool fetchRadar(RadarData& radar);
-bool fetchRepo(RepoData& repo);
 
 }  // namespace services

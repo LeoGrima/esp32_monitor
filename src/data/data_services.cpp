@@ -15,7 +15,6 @@ constexpr uint8_t kPtaxLookbackDays = 14;  // cobre fins de semana e feriados
 constexpr uint8_t kNewsPoolSize = 8;
 constexpr uint8_t kVideoPoolSize = 5;
 constexpr uint8_t kStoryPoolSize = 5;
-constexpr float kKmPerNauticalMile = 1.852f;
 constexpr size_t kThumbnailCapacity = 64 * 1024;
 
 bool fetchPtax(const char* currencyCode, CurrencyQuote& quote, float* week, uint8_t* weekCount, char* updatedAt) {
@@ -201,34 +200,6 @@ bool fetchHackerNews(NewsData& news) {
   }
   news.valid = news.headlines[0][0] != '\0';
   return news.valid;
-}
-
-bool fetchRadar(RadarData& radar) {
-  char url[96];
-  snprintf(url, sizeof(url), "https://api.adsb.lol/v2/point/%.4f/%.4f/%.0f", place().latitude, place().longitude,
-           config::kRadarRadiusKm / kKmPerNauticalMile);
-  radar.radiusKm = config::kRadarRadiusKm;
-  String body;
-  return http::get(url, body) && parsers::parseAircraft(body.c_str(), radar);
-}
-
-bool fetchRepo(RepoData& repo) {
-  char url[160];
-  String body;
-  repo.name = config::kGithubRepo;
-  snprintf(url, sizeof(url), "https://api.github.com/repos/%s", config::kGithubRepo);
-  if (!http::get(url, body) || !parsers::parseRepo(body.c_str(), repo)) return false;
-
-  uint32_t pullRequests = 0;
-  snprintf(url, sizeof(url), "https://api.github.com/search/issues?q=repo:%s+type:pr+state:open&per_page=1",
-           config::kGithubRepo);
-  if (http::get(url, body) && parsers::parseSearchCount(body.c_str(), pullRequests)) {
-    repo.openPullRequests = pullRequests;
-    repo.openIssues -= pullRequests < repo.openIssues ? pullRequests : repo.openIssues;
-  }
-  snprintf(url, sizeof(url), "https://api.github.com/repos/%s/actions/runs?per_page=1", config::kGithubRepo);
-  if (http::get(url, body)) parsers::parseWorkflowRun(body.c_str(), repo.build);
-  return true;
 }
 
 }  // namespace services

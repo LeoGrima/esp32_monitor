@@ -10,8 +10,7 @@ namespace config {
 // Telas exibidas, na ordem de rotação (remova as que não quiser)
 constexpr ui::Screen kScreens[] = {
     ui::Screen::Clock, ui::Screen::Weather, ui::Screen::Currency,   ui::Screen::Crypto, ui::Screen::Stocks,
-    ui::Screen::News,  ui::Screen::HackerNews, ui::Screen::Video, ui::Screen::Radar, ui::Screen::Repo,
-    ui::Screen::Battery};
+    ui::Screen::News,  ui::Screen::HackerNews, ui::Screen::Video, ui::Screen::Battery};
 constexpr uint32_t kScreenRotationSeconds = 15;  // 0 = troca apenas pelo toque
 
 // Tela
@@ -29,7 +28,7 @@ constexpr char kTimezone[] = "<-04>4";  // reserva: Cuiabá/MT, UTC-4 (formato P
 constexpr char kNtpServer[] = "a.st1.ntp.br";
 constexpr bool kSouthernHemisphere = true;
 
-// Local: usado pelo clima (Open-Meteo) e pelo radar de aeronaves (adsb.lol).
+// Local: usado pelo clima (Open-Meteo).
 // Com a detecção ligada, cidade, coordenadas e fuso horário vêm do endereço de rede (ipwho.is);
 // os valores deste arquivo valem enquanto a detecção não responde ou se ela estiver desligada.
 constexpr bool kDetectLocation = true;
@@ -61,12 +60,6 @@ constexpr char kNewsSource[] = "g1";
 // YouTube: ID do canal (começa com "UC"); vazio desativa a tela
 constexpr char kYoutubeChannelId[] = "";
 
-// Radar
-constexpr float kRadarRadiusKm = 40;
-
-// Repositório (GitHub, público): dono/nome
-constexpr char kGithubRepo[] = "espressif/arduino-esp32";
-
 // Intervalos de atualização
 constexpr uint32_t kMinuteMs = 60UL * 1000;
 constexpr uint32_t kWeatherIntervalMs = 15 * kMinuteMs;
@@ -76,8 +69,6 @@ constexpr uint32_t kStocksIntervalMs = 5 * kMinuteMs;
 constexpr uint32_t kNewsIntervalMs = 2 * kMinuteMs;   // avança uma manchete por ciclo
 constexpr uint32_t kVideoIntervalMs = 2 * kMinuteMs;  // avança um vídeo por ciclo
 constexpr uint32_t kHackerNewsIntervalMs = 5 * kMinuteMs;
-constexpr uint32_t kRadarIntervalMs = 1 * kMinuteMs;
-constexpr uint32_t kRepoIntervalMs = 10 * kMinuteMs;  // a API sem token permite 60 consultas por hora
 constexpr uint32_t kRetryIntervalMs = 30UL * 1000;
 
 }  // namespace config

@@ -16,7 +16,7 @@ namespace {
 
 constexpr int kWidth = 320;
 constexpr int kHeight = 240;
-constexpr uint8_t kScreenCount = 11;
+constexpr uint8_t kScreenCount = 9;
 
 LGFX_Sprite canvas;
 std::string outputDir;
@@ -95,9 +95,6 @@ int main(int argc, char** argv) {
   strcpy(state.hackerNews.headlines[1], "Why embedded fonts still matter");
   strcpy(state.hackerNews.headlines[2], "The surprising cost of TLS handshakes on microcontrollers");
   strcpy(state.hackerNews.detail, "538 pontos · 133 comentários");
-  state.radar = {{{"GLO1513", "B38M", 19.0f, 269, 2034}, {"TAM3321", "A320", 31.5f, 40, 5200},
-                  {"AZU4410", "E195", 12.2f, 150, 900}, {"PTABC", "C172", 36.0f, 310, 450}}, 4, 16, 40, true};
-  state.repo = {"espressif/arduino-esp32", 15234, 412, 37, BuildState::Passed, true};
 
   const ui::NetworkEntry networks[] = {{"Casa 2.4G", -48, true}, {"Vizinho", -67, true}, {"Cafeteria Livre", -72, false},
                                        {"Escritório", -80, true}, {"IoT", -88, true}, {"Outra", -90, true}};
@@ -123,8 +120,6 @@ int main(int argc, char** argv) {
   state.battery = {4.12f, 91, BatteryTrend::Charging, 32.0f, 17, true};
   save(ui::Screen::Battery, state, "alt_battery_charging");
   save(ui::Screen::HackerNews, state, "hacker_news");
-  save(ui::Screen::Radar, state, "radar");
-  save(ui::Screen::Repo, state, "repo");
   save(ui::Screen::Weather, state, "weather");
   save(ui::Screen::Currency, state, "currency");
   save(ui::Screen::Crypto, state, "crypto");
