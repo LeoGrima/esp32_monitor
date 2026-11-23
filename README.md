@@ -4,7 +4,7 @@ Firmware para o módulo **ES3C28P** (ESP32-S3 + tela IPS 2.8" 240x320 com toque 
 
 | Tela | Conteúdo | Fonte dos dados |
 |---|---|---|
-| Relógio | Hora, dia da semana, data completa com ano e estação | NTP |
+| Relógio | Relógio digital com segundos, dia da semana e data completa com ano | NTP |
 | Clima | Temperatura, máxima/mínima, condição e chuva nas próximas 12 h | Open-Meteo |
 | Dólar | Cotação PTAX, variação do dia, barras da semana e euro | Banco Central (PTAX) |
 | Cripto | Preço e variação em 24 h (até 4 moedas) | CoinGecko |
@@ -45,7 +45,7 @@ Se a porta não aparecer, entre em modo de gravação: segure **BOOT**, pression
 | `kDisplayRotation`, `kBrightness` | Orientação (1 ou 3) e brilho |
 | `kDetectLocation` | Detecta cidade e fuso horário pelo endereço de rede (ipwho.is) |
 | `kCityName`, `kLatitude`, `kLongitude` | Local usado se a detecção estiver desligada ou falhar |
-| `kTimezone`, `kSouthernHemisphere` | Fuso horário de reserva e estação do ano |
+| `kTimezone` | Fuso horário de reserva |
 | `kCoins`, `kCryptoCurrency` | Moedas da tela Cripto |
 | `kStocks` | Ativos da tela Bolsa (ações da B3 terminam em `.SA`) |
 | `kNewsFeedUrl`, `kNewsSource` | Feed RSS de notícias |

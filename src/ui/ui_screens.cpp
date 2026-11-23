@@ -20,7 +20,7 @@ void drawScreen(LovyanGFX& gfx, Screen screen, const DashboardState& state) {
       break;
     case Screen::Battery:  drawBatteryScreen(gfx, state.battery); break;
     case Screen::Video:    drawVideoScreen(gfx, state.video, state.nowEpoch); break;
-    case Screen::Clock:    drawClockScreen(gfx, state.now, state.southernHemisphere); break;
+    case Screen::Clock:    drawClockScreen(gfx, state.now); break;
   }
 }
 

@@ -34,7 +34,6 @@ struct DashboardState {
   long long nowEpoch = 0;
   const char* city = "";
   const char* newsSource = "";
-  bool southernHemisphere = true;
 };
 
 void drawScreen(LovyanGFX& gfx, Screen screen, const DashboardState& state);
@@ -47,6 +46,6 @@ void drawStocksScreen(LovyanGFX& gfx, const StocksData& stocks);
 void drawHeadlineScreen(LovyanGFX& gfx, const NewsData& news, const HeadlineStyle& style);
 void drawBatteryScreen(LovyanGFX& gfx, const BatteryData& battery);
 void drawVideoScreen(LovyanGFX& gfx, const VideoData& video, long long nowEpoch);
-void drawClockScreen(LovyanGFX& gfx, const tm& now, bool southernHemisphere);
+void drawClockScreen(LovyanGFX& gfx, const tm& now);
 
 }  // namespace ui

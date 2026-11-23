@@ -188,7 +188,6 @@ void setup() {
 
   state.city = services::currentPlace().city;
   state.newsSource = config::kNewsSource;
-  state.southernHemisphere = config::kSouthernHemisphere;
   selectActiveScreens();
 
   String ssid;

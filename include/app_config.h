@@ -26,7 +26,6 @@ constexpr float kBatteryDividerRatio = 2.0f;
 // Data e hora
 constexpr char kTimezone[] = "<-04>4";  // reserva: Cuiabá/MT, UTC-4 (formato POSIX; Brasília seria "<-03>3")
 constexpr char kNtpServer[] = "a.st1.ntp.br";
-constexpr bool kSouthernHemisphere = true;
 
 // Local: usado pelo clima (Open-Meteo).
 // Com a detecção ligada, cidade, coordenadas e fuso horário vêm do endereço de rede (ipwho.is);
