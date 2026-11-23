@@ -11,7 +11,7 @@ mkdir -p "$BUILD/obj" "$ROOT/docs/preview"
 FLAGS=(-O1 -w -DLGFX_LINUX_FB -I"$LGFX/src" -I"$ROOT/src")
 shopt -s nullglob
 SOURCES=("$LGFX"/src/lgfx/v1/*.cpp "$LGFX"/src/lgfx/v1/misc/*.cpp "$LGFX"/src/lgfx/utility/*.c
-         "$LGFX"/src/lgfx/Fonts/*/*.c "$ROOT"/src/ui/*.cpp "$ROOT"/src/ui/fonts/*.cpp
+         "$LGFX"/src/lgfx/Fonts/*/*.c "$ROOT"/src/ui/*.cpp "$ROOT"/src/model/*.cpp "$ROOT"/src/ui/fonts/*.cpp
          "$ROOT"/tools/simulator/main.cpp)
 
 OBJECTS=()

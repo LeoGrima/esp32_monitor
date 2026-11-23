@@ -1,5 +1,5 @@
 // Testa os parsers no PC com respostas de exemplo (ou reais, salvas em arquivo).
-// Uso: test_parsers [pasta com weather.json, ptax.json, crypto.json, stock.json, news.xml, video.xml, stories.json, story.json]
+// Uso: test_parsers [pasta com weather.json, ptax.json, crypto.json, stock.json, news.xml, video.xml]
 #include <cassert>
 #include <cmath>
 #include <cstdio>
@@ -9,6 +9,7 @@
 #include <string>
 
 #include "data/data_parsers.h"
+#include "model/world_time.h"
 #include "power/battery_estimator.h"
 
 namespace {
@@ -47,9 +48,6 @@ constexpr char kVideo[] = R"(<feed><title>Canal de Exemplo</title>
 <entry><id>yt:video:abc123DEF45</id><yt:videoId>abc123DEF45</yt:videoId><title>Primeiro &amp; único</title>
 <published>2026-11-17T15:00:12+00:00</published></entry>
 <entry><yt:videoId>zzz999</yt:videoId><title>Segundo</title><published>1970-01-02T00:00:00+00:00</published></entry></feed>)";
-
-constexpr char kStories[] = "[50582069,50593925,50593199,50593125]";
-constexpr char kStory[] = R"({"by":"x","descendants":133,"id":1,"kids":[1,2],"score":538,"title":"Hello \"HN\"","type":"story"})";
 
 }  // namespace
 
@@ -113,14 +111,21 @@ int main(int argc, char** argv) {
     assert(videoCount == 2 && strcmp(channel, "Canal de Exemplo") == 0 && videos[1].publishedAt == 86400);
     assert(strcmp(videos[0].title, "Primeiro & único") == 0 && videos[0].publishedAt == 1794927612);
   }
-  uint32_t ids[3];
-  assert(parsers::parseStoryIds(load(dir, "stories.json", kStories).c_str(), ids, 3) == 3);
-  char title[kNewsTitleSize];
-  uint32_t score = 0;
-  uint32_t comments = 0;
-  assert(parsers::parseStory(load(dir, "story.json", kStory).c_str(), title, sizeof(title), score, comments));
-  printf("hacker news: %u, %u... | %s (%u pontos, %u comentarios)\n", ids[0], ids[1], title, score, comments);
-  if (samples) assert(ids[2] == 50593199 && score == 538 && comments == 133 && strcmp(title, "Hello \"HN\"") == 0);
+  // Fusos: horário de verão dos EUA (08/03 a 01/11/2026) e da Europa (29/03 a 25/10/2026)
+  const CityZone newYork = {"Nova York", -300, DstRule::UnitedStates};
+  const CityZone lisbon = {"Lisboa", 0, DstRule::Europe};
+  const auto at = [](int y, int m, int d, int h) { return world_time::daysFromCivil(y, m, d) * 86400LL + h * 3600; };
+  assert(world_time::utcOffsetSeconds(newYork, at(2026, 11, 22, 12)) == -5 * 3600);
+  assert(world_time::utcOffsetSeconds(newYork, at(2026, 7, 1, 12)) == -4 * 3600);
+  assert(world_time::utcOffsetSeconds(newYork, at(2026, 3, 8, 6)) == -5 * 3600);
+  assert(world_time::utcOffsetSeconds(newYork, at(2026, 3, 8, 8)) == -4 * 3600);
+  assert(world_time::utcOffsetSeconds(newYork, at(2026, 11, 1, 5)) == -4 * 3600);
+  assert(world_time::utcOffsetSeconds(newYork, at(2026, 11, 1, 7)) == -5 * 3600);
+  assert(world_time::utcOffsetSeconds(lisbon, at(2026, 3, 29, 0)) == 0);
+  assert(world_time::utcOffsetSeconds(lisbon, at(2026, 3, 29, 2)) == 3600);
+  assert(world_time::utcOffsetSeconds(lisbon, at(2026, 10, 25, 2)) == 0);
+  const world_time::CivilDate date = world_time::civilFromDays(world_time::daysFromCivil(2028, 2, 29));
+  assert(date.year == 2028 && date.month == 2 && date.day == 29);
 
   // Bateria: 30 minutos descarregando de 4,02 V (80%) para 3,95 V (70%)
   BatteryEstimator estimator;

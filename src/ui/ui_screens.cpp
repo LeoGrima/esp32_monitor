@@ -15,12 +15,9 @@ void drawScreen(LovyanGFX& gfx, Screen screen, const DashboardState& state) {
     case Screen::News:
       drawHeadlineScreen(gfx, state.news, {"MANCHETE", state.newsSource, "Aguardando notícias", 0xE5383Bu, 0x3A0E14u, 0x140A0Du});
       break;
-    case Screen::HackerNews:
-      drawHeadlineScreen(gfx, state.hackerNews, {"TOPO", "Hacker News", "Aguardando o Hacker News", 0xFF7A1Au, 0x3A1E08u, 0x140C06u});
-      break;
-    case Screen::Battery:  drawBatteryScreen(gfx, state.battery); break;
     case Screen::Video:    drawVideoScreen(gfx, state.video, state.nowEpoch); break;
     case Screen::Clock:    drawClockScreen(gfx, state.now); break;
+    case Screen::WorldClock: drawWorldClockScreen(gfx, state); break;
   }
 }
 

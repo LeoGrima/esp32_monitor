@@ -9,7 +9,7 @@
 namespace ui {
 
 enum class Screen : uint8_t {
-  Clock, Weather, Currency, Crypto, Stocks, News, HackerNews, Video, Battery
+  Clock, WorldClock, Weather, Currency, Crypto, Stocks, News, Video, Battery
 };
 
 struct HeadlineStyle {
@@ -27,11 +27,12 @@ struct DashboardState {
   CryptoData crypto;
   StocksData stocks;
   NewsData news;
-  NewsData hackerNews;
   BatteryData battery;
   VideoData video;
   tm now = {};
   long long nowEpoch = 0;
+  const CityZone* cities = nullptr;  // tela de fusos
+  uint8_t cityCount = 0;
   const char* city = "";
   const char* newsSource = "";
 };
@@ -47,5 +48,6 @@ void drawHeadlineScreen(LovyanGFX& gfx, const NewsData& news, const HeadlineStyl
 void drawBatteryScreen(LovyanGFX& gfx, const BatteryData& battery);
 void drawVideoScreen(LovyanGFX& gfx, const VideoData& video, long long nowEpoch);
 void drawClockScreen(LovyanGFX& gfx, const tm& now);
+void drawWorldClockScreen(LovyanGFX& gfx, const DashboardState& state);
 
 }  // namespace ui

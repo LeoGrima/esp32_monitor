@@ -17,6 +17,5 @@ bool fetchCrypto(CryptoData& crypto);
 bool fetchStocks(StocksData& stocks);
 bool fetchNews(NewsData& news);
 bool fetchVideo(VideoData& video);
-bool fetchHackerNews(NewsData& news);
 
 }  // namespace services

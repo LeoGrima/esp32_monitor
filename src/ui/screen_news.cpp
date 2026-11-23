@@ -37,11 +37,6 @@ void drawHeadlineScreen(LovyanGFX& gfx, const NewsData& news, const HeadlineStyl
 
   gfx.setFont(&fonts().medium);
   y += 8;
-  if (news.detail[0] != '\0') {
-    gfx.setTextColor(kAccent);
-    gfx.drawString(news.detail, kMargin, y);
-    y += 24;
-  }
   gfx.setTextColor(color::kTextMuted);
   for (uint8_t i = 1; i < kNewsVisible && news.headlines[i][0] != '\0'; ++i, y += 22) {
     if (y + 20 > gfx.height() - 20) break;

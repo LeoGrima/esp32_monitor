@@ -5,12 +5,12 @@ Firmware para o módulo **ES3C28P** (ESP32-S3 + tela IPS 2.8" 240x320 com toque 
 | Tela | Conteúdo | Fonte dos dados |
 |---|---|---|
 | Relógio | Relógio digital com segundos, dia da semana e data completa com ano | NTP |
+| Fusos | Hora local e de até 3 cidades, com a diferença e o horário de verão | NTP |
 | Clima | Temperatura, máxima/mínima, condição e chuva nas próximas 12 h | Open-Meteo |
 | Dólar | Cotação PTAX, variação do dia, barras da semana e euro | Banco Central (PTAX) |
 | Cripto | Preço e variação em 24 h (até 4 moedas) | CoinGecko |
 | Bolsa | Ibovespa, S&P 500 e Nasdaq (ou ações) | Yahoo Finance |
 | Notícias | Manchete e duas chamadas seguintes | RSS (g1 por padrão) |
-| Hacker News | Histórias do topo, pontos e comentários | API do Hacker News |
 | YouTube | Vídeos recentes do canal: miniatura, título e idade | RSS do canal |
 | Bateria | Carga, tensão, tempo restante e ritmo de carga ou descarga | ADC do módulo |
 
@@ -50,6 +50,7 @@ Se a porta não aparecer, entre em modo de gravação: segure **BOOT**, pression
 | `kStocks` | Ativos da tela Bolsa (ações da B3 terminam em `.SA`) |
 | `kNewsFeedUrl`, `kNewsSource` | Feed RSS de notícias |
 | `kYoutubeChannelId` | Canal do YouTube; **vazio desativa a tela** |
+| `kWorldCities` | Cidades da tela de fusos |
 | `kBatteryDividerRatio` | Calibração da leitura de tensão da bateria |
 | `k...IntervalMs` | Intervalos de atualização |
 
@@ -87,7 +88,7 @@ tools/simulator/build_preview.sh
 ```
 
 ```bash
-g++ -std=c++17 -I.pio/libdeps/es3c28p/ArduinoJson/src -Isrc tools/test_parsers.cpp src/data/*_parsers.cpp -o .pio/test_parsers && .pio/test_parsers
+g++ -std=c++17 -I.pio/libdeps/es3c28p/ArduinoJson/src -Isrc tools/test_parsers.cpp src/data/*_parsers.cpp src/model/*.cpp src/power/battery_estimator.cpp -o .pio/test_parsers && .pio/test_parsers
 ```
 
 O teste de parsers aceita uma pasta com respostas reais salvas (nomes dos arquivos no início de `tools/test_parsers.cpp`).

@@ -27,10 +27,6 @@ bool parsePtax(const char* json, CurrencyQuote& quote, float* week = nullptr, ui
 bool parseCoin(const char* json, const char* coinId, const char* currency, CoinQuote& coin);
 bool parseStock(const char* json, StockQuote& stock);
 
-// Hacker News
-uint8_t parseStoryIds(const char* json, uint32_t* ids, uint8_t maxIds);
-bool parseStory(const char* json, char* title, size_t titleSize, uint32_t& score, uint32_t& comments);
-
 // Fuso no formato POSIX a partir do deslocamento em relação ao UTC (ex.: -14400 -> "<-0400>4:00")
 void formatTimezone(int32_t utcOffsetSeconds, char* out, size_t outSize);
 

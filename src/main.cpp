@@ -65,7 +65,6 @@ Service services[] = {
     {ui::Screen::Stocks, config::kStocksIntervalMs, [] { return refresh(&ui::DashboardState::stocks, services::fetchStocks); }},
     {ui::Screen::News, config::kNewsIntervalMs, [] { return refresh(&ui::DashboardState::news, services::fetchNews); }},
     {ui::Screen::Video, config::kVideoIntervalMs, [] { return refresh(&ui::DashboardState::video, services::fetchVideo); }},
-    {ui::Screen::HackerNews, config::kHackerNewsIntervalMs, [] { return refresh(&ui::DashboardState::hackerNews, services::fetchHackerNews); }},
 };
 
 bool isTimeSynced() { return time(nullptr) > kValidEpoch; }
@@ -188,6 +187,8 @@ void setup() {
 
   state.city = services::currentPlace().city;
   state.newsSource = config::kNewsSource;
+  state.cities = config::kWorldCities;
+  state.cityCount = sizeof(config::kWorldCities) / sizeof(config::kWorldCities[0]);
   selectActiveScreens();
 
   String ssid;

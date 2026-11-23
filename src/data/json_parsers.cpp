@@ -4,6 +4,7 @@
 
 #include <ArduinoJson.h>
 
+#include "../model/world_time.h"
 #include "data_parsers.h"
 
 namespace parsers {
@@ -121,41 +122,8 @@ long long parseIsoDate(const char* text) {
   int year, month, day, hour, minute;
   int second = 0;
   if (sscanf(text, "%d-%d-%dT%d:%d:%d", &year, &month, &day, &hour, &minute, &second) < 5) return 0;
-  // Dias desde 1970 (algoritmo civil de Howard Hinnant)
-  year -= month <= 2;
-  const long long era = (year >= 0 ? year : year - 399) / 400;
-  const long long yearOfEra = year - era * 400;
-  const long long dayOfYear = (153 * (month + (month > 2 ? -3 : 9)) + 2) / 5 + day - 1;
-  const long long dayOfEra = yearOfEra * 365 + yearOfEra / 4 - yearOfEra / 100 + dayOfYear;
-  const long long days = era * 146097 + dayOfEra - 719468;
+  const long long days = world_time::daysFromCivil(year, month, day);
   return days * 86400 + hour * 3600 + minute * 60 + second;
-}
-
-uint8_t parseStoryIds(const char* json, uint32_t* ids, uint8_t maxIds) {
-  // A lista tem centenas de itens; lê só os primeiros, sem montar o documento
-  uint8_t count = 0;
-  const char* cursor = strchr(json, '[');
-  while (cursor != nullptr && count < maxIds) {
-    char* end = nullptr;
-    const unsigned long id = strtoul(cursor + 1, &end, 10);
-    if (end == cursor + 1) break;
-    ids[count++] = id;
-    cursor = (*end == ',') ? end : nullptr;
-  }
-  return count;
-}
-
-bool parseStory(const char* json, char* title, size_t titleSize, uint32_t& score, uint32_t& comments) {
-  JsonDocument filter;
-  filter["title"] = filter["score"] = filter["descendants"] = true;
-  JsonDocument doc;
-  if (deserializeJson(doc, json, DeserializationOption::Filter(filter))) return false;
-  const char* text = doc["title"];
-  if (text == nullptr) return false;
-  snprintf(title, titleSize, "%s", text);
-  score = doc["score"] | 0;
-  comments = doc["descendants"] | 0;
-  return true;
 }
 
 }  // namespace parsers

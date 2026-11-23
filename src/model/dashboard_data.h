@@ -61,10 +61,18 @@ struct VideoData {
 
 struct NewsData {
   char headlines[kNewsVisible][kNewsTitleSize] = {};  // manchete + chamadas seguintes
-  char detail[40] = "";  // linha complementar (ex.: pontos e comentários)
   uint8_t index = 0;
   uint8_t total = 0;
   bool valid = false;
+};
+
+enum class DstRule : uint8_t { None, UnitedStates, Europe };
+
+// Cidade da tela de fusos: deslocamento padrão em relação ao UTC e regra de horário de verão
+struct CityZone {
+  const char* name;
+  int16_t utcOffsetMinutes;
+  DstRule dst;
 };
 
 enum class BatteryTrend : uint8_t { Unknown, Stable, Charging, Discharging };

@@ -14,7 +14,6 @@ namespace {
 constexpr uint8_t kPtaxLookbackDays = 14;  // cobre fins de semana e feriados
 constexpr uint8_t kNewsPoolSize = 8;
 constexpr uint8_t kVideoPoolSize = 5;
-constexpr uint8_t kStoryPoolSize = 5;
 constexpr size_t kThumbnailCapacity = 64 * 1024;
 
 bool fetchPtax(const char* currencyCode, CurrencyQuote& quote, float* week, uint8_t* weekCount, char* updatedAt) {
@@ -171,35 +170,6 @@ bool fetchVideo(VideoData& video) {
   }
   video.valid = true;
   return true;
-}
-
-bool fetchHackerNews(NewsData& news) {
-  uint32_t ids[kStoryPoolSize];
-  String body;
-  if (!http::get("https://hacker-news.firebaseio.com/v0/topstories.json", body)) return false;
-  const uint8_t total = parsers::parseStoryIds(body.c_str(), ids, kStoryPoolSize);
-  if (total == 0) return false;
-
-  news.index = news.valid ? (news.index + 1) % total : 0;
-  news.total = total;
-  for (uint8_t i = 0; i < kNewsVisible; ++i) {
-    char url[80];
-    uint32_t score = 0;
-    uint32_t comments = 0;
-    news.headlines[i][0] = '\0';
-    snprintf(url, sizeof(url), "https://hacker-news.firebaseio.com/v0/item/%lu.json",
-             static_cast<unsigned long>(ids[(news.index + i) % total]));
-    if (i >= total || !http::get(url, body) ||
-        !parsers::parseStory(body.c_str(), news.headlines[i], sizeof(news.headlines[i]), score, comments)) {
-      continue;
-    }
-    if (i == 0) {
-      snprintf(news.detail, sizeof(news.detail), "%lu pontos · %lu comentários", static_cast<unsigned long>(score),
-               static_cast<unsigned long>(comments));
-    }
-  }
-  news.valid = news.headlines[0][0] != '\0';
-  return news.valid;
 }
 
 }  // namespace services

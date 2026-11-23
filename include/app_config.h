@@ -9,8 +9,8 @@ namespace config {
 
 // Telas exibidas, na ordem de rotação (remova as que não quiser)
 constexpr ui::Screen kScreens[] = {
-    ui::Screen::Clock, ui::Screen::Weather, ui::Screen::Currency,   ui::Screen::Crypto, ui::Screen::Stocks,
-    ui::Screen::News,  ui::Screen::HackerNews, ui::Screen::Video, ui::Screen::Battery};
+    ui::Screen::Clock, ui::Screen::WorldClock, ui::Screen::Weather, ui::Screen::Currency,   ui::Screen::Crypto, ui::Screen::Stocks,
+    ui::Screen::News,  ui::Screen::Video, ui::Screen::Battery};
 constexpr uint32_t kScreenRotationSeconds = 15;  // 0 = troca apenas pelo toque
 
 // Tela
@@ -18,6 +18,12 @@ constexpr uint8_t kDisplayRotation = 1;  // paisagem: 1 ou 3 (invertida)
 constexpr bool kDisplayInvertColors = true;  // painel IPS; troque se as cores saírem negativas
 constexpr uint8_t kTouchRotationOffset = 2;  // 0 a 3: alinha o toque com a imagem (2 = 180 graus)
 constexpr uint8_t kBrightness = 200;     // 0 a 255
+
+// Fusos: até 3 cidades, com o deslocamento padrão em relação ao UTC (em minutos) e a regra de
+// horário de verão (None, UnitedStates ou Europe). A primeira aparece em destaque.
+constexpr CityZone kWorldCities[] = {{"Nova York", -5 * 60, DstRule::UnitedStates},
+                                     {"Lisboa", 0, DstRule::Europe},
+                                     {"Tóquio", 9 * 60, DstRule::None}};
 
 // Bateria: a tensão chega ao ADC por um divisor resistivo. Se a tensão exibida não bater com a de um
 // multímetro, ajuste: novo valor = valor atual x (tensão real / tensão exibida)
@@ -67,7 +73,6 @@ constexpr uint32_t kCryptoIntervalMs = 5 * kMinuteMs;
 constexpr uint32_t kStocksIntervalMs = 5 * kMinuteMs;
 constexpr uint32_t kNewsIntervalMs = 2 * kMinuteMs;   // avança uma manchete por ciclo
 constexpr uint32_t kVideoIntervalMs = 2 * kMinuteMs;  // avança um vídeo por ciclo
-constexpr uint32_t kHackerNewsIntervalMs = 5 * kMinuteMs;
 constexpr uint32_t kRetryIntervalMs = 30UL * 1000;
 
 }  // namespace config

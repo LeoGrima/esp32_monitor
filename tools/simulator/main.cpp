@@ -86,40 +86,18 @@ int main(int argc, char** argv) {
     state.video.thumbnail = thumbnail.data();
     state.video.thumbnailSize = thumbnail.size();
   }
-  state.now.tm_year = 126; state.now.tm_mon = 10; state.now.tm_mday = 21; state.now.tm_wday = 6;
-  state.now.tm_hour = 20; state.now.tm_min = 14; state.now.tm_sec = 37;
-
-  state.hackerNews.valid = true;
-  state.hackerNews.total = 5;
-  strcpy(state.hackerNews.headlines[0], "Show HN: A desk dashboard built with an ESP32-S3 and a 2.8 inch IPS display");
-  strcpy(state.hackerNews.headlines[1], "Why embedded fonts still matter");
-  strcpy(state.hackerNews.headlines[2], "The surprising cost of TLS handshakes on microcontrollers");
-  strcpy(state.hackerNews.detail, "538 pontos · 133 comentários");
-
-  const ui::NetworkEntry networks[] = {{"Casa 2.4G", -48, true}, {"Vizinho", -67, true}, {"Cafeteria Livre", -72, false},
-                                       {"Escritório", -80, true}, {"IoT", -88, true}, {"Outra", -90, true}};
-  ui::drawNetworkList(canvas, {networks, 6, 0});
-  dump("wifi_list");
-  ui::drawKeyboard(canvas, {"Casa 2.4G", "minhaSenha123", ui::KeyboardMode::Lower});
-  dump("wifi_keyboard");
-  ui::drawKeyboard(canvas, {"Casa 2.4G", "", ui::KeyboardMode::Symbols});
-  dump("alt_wifi_symbols");
-  const ui::KeyHit keyQ = ui::hitKeyboard(ui::KeyboardMode::Lower, 5, 110);
-  const ui::KeyHit keyOk = ui::hitKeyboard(ui::KeyboardMode::Lower, 300, 230);
-  const ui::KeyHit keyDel = ui::hitKeyboard(ui::KeyboardMode::Upper, 300, 150);
-  const ui::ListHit row2 = ui::hitNetworkList({networks, 6, 0}, 100, 80);
-  const ui::ListHit rescan = ui::hitNetworkList({networks, 6, 0}, 160, 225);
-  if (keyQ.character != 'q' || keyOk.action != ui::KeyAction::Confirm || keyDel.action != ui::KeyAction::Backspace ||
-      row2.action != ui::ListAction::Select || row2.index != 1 || rescan.action != ui::ListAction::Rescan) {
-    fprintf(stderr, "mapeamento de toque incorreto\n");
-    return 1;
-  }
+  const time_t cuiabaNow = state.nowEpoch - 4 * 3600;  // hora de Cuiabá (UTC-4)
+  gmtime_r(&cuiabaNow, &state.now);
 
   state.battery = {3.98f, 76, BatteryTrend::Discharging, -18.0f, 253, true};
   save(ui::Screen::Battery, state, "battery");
   state.battery = {4.12f, 91, BatteryTrend::Charging, 32.0f, 17, true};
   save(ui::Screen::Battery, state, "alt_battery_charging");
-  save(ui::Screen::HackerNews, state, "hacker_news");
+  const CityZone cities[] = {{"Nova York", -300, DstRule::UnitedStates}, {"Lisboa", 0, DstRule::Europe},
+                             {"Tóquio", 540, DstRule::None}};
+  state.cities = cities;
+  state.cityCount = 3;
+  save(ui::Screen::WorldClock, state, "world_clock");
   save(ui::Screen::Weather, state, "weather");
   save(ui::Screen::Currency, state, "currency");
   save(ui::Screen::Crypto, state, "crypto");
